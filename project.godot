@@ -1,0 +1,27 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="Project Arcane Tavern"
+config/description="Vertical Slice foundation for a 3D, AI-driven tavern management & social simulation game (Godot 4.x). Godot is the single source of truth; AI output is advisory only and always passes through Godot-side rule validation."
+config/features=PackedStringArray("4.7")
+config/icon="res://icon.svg"
+run/main_scene="res://game/scenes/main/main.tscn"
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+
+[rendering]
+
+renderer/rendering_method="forward_plus"
+renderer/rendering_method.mobile="gl_compatibility"

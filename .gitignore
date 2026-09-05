@@ -1,0 +1,16 @@
+# Godot 4+ generated data (import cache, uid cache, editor state)
+.godot/
+
+# Exported builds
+build/
+export/
+
+# Editor export presets contain local paths / secrets — keep them per-machine
+export_presets.cfg
+*.translation
+
+# OS / editor junk
+Thumbs.db
+Desktop.ini
+.DS_Store
+*.tmp

@@ -1,0 +1,24 @@
+# Normalize line endings; Godot text formats stay LF for cross-platform diffs
+* text=auto
+
+# Dotfiles and Godot import sidecar metadata
+.*          text eol=lf
+*.import    text eol=lf
+
+*.gd   text eol=lf
+*.tscn text eol=lf
+*.tres text eol=lf
+*.godot text eol=lf
+*.md   text eol=lf
+*.svg  text eol=lf
+*.json text eol=lf
+*.yml  text eol=lf
+
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.webp binary
+*.glb  binary
+*.gltf binary
+*.wav  binary
+*.ogg  binary
