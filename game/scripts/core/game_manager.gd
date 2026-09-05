@@ -18,4 +18,5 @@ func quit_game() -> void:
 
 
 func _emit_boot() -> void:
+	GameState.begin_playing()
 	EventBus.game_booted.emit(Time.get_ticks_msec())

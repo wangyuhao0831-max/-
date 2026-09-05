@@ -1,12 +1,14 @@
 class_name ItemDropper
 extends Node3D
 ## Interaction：把库存物品"放下"回世界（Q 键输入 / try_drop() 直接调用）。
+## Phase 2A 契约：先经 RuleValidator.validate_inventory_has()（抽取侧检查），
+## 通过后执行 Inventory.remove_item() 并广播 InteractionResult；
+## 不再返回裸 bool（见 InteractionResult 铁律）。
 ## 规则：每次丢弃"最早加入的堆叠"的第 1 件；放置于角色前方 drop_distance 处，
 ## 并向下射线探测承载面（地板/桌面/箱顶），物品底部贴面。
 ## 产出为统一占位模板 dropped_pickup.tscn（占位视觉=琥珀瓶；正式视觉后续数据驱动接入）。
-## 事件：经由 Inventory.remove_item → changed → PlayerController 转发 EventBus，
-## 本组件不直接广播（R6）。
 
+const ACTION := &"drop_item"
 const DROPPED_PICKUP_SCENE := preload("res://game/scenes/dev/dropped_pickup.tscn")
 ## 与 dropped_pickup.tscn 中 CylinderMesh height=0.5 匹配（半高用于贴面）。
 const ITEM_HALF_HEIGHT := 0.25
@@ -39,27 +41,43 @@ func _unhandled_input(event: InputEvent) -> void:
 			try_drop()
 
 
-## 丢下"最早加入堆叠"的第 1 件；成功返回 true。
-## 库存为空/无 Inventory/放置失败时返回 false（调试构建打印原因）。
-func try_drop() -> bool:
+## 丢下"最早加入堆叠"的第 1 件；返回 InteractionResult（禁止裸 bool）。
+func try_drop() -> InteractionResult:
 	var inventory := _resolve_inventory()
 	if inventory == null:
-		push_warning("ItemDropper: actor 子树中未找到 Inventory")
-		return false
+		return _finish(InteractionResult.failed(
+			InteractionResult.CODE_INVENTORY_UNKNOWN, ACTION, &"", &"",
+			"actor 子树中未找到 Inventory"
+		))
+	var actor_id := GameState.get_actor_id_for_inventory(inventory.inventory_id)
 	if inventory.stack_count() <= 0:
-		print_debug("[ItemDropper] 库存为空，无可丢下物品")
-		return false
+		return _finish(InteractionResult.failed(
+			InteractionResult.CODE_INVENTORY_EMPTY, ACTION, actor_id, &"",
+			"库存为空，无可丢下物品"
+		))
 	var stack := inventory.list_stacks()[0]
 	var definition := stack.definition
 	if definition == null:
-		push_warning("ItemDropper: 堆叠缺少 definition")
-		return false
+		return _finish(InteractionResult.failed(
+			InteractionResult.CODE_STATE_MISMATCH, ACTION, actor_id, &"",
+			"堆叠缺少 definition"
+		))
+	# 统一闸门：抽取侧校验（库存是否有 1 件）。
+	var verdict := RuleValidator.validate_inventory_has(inventory.inventory_id, definition.item_id, 1)
+	if not verdict.success:
+		return _finish(verdict)
 	if inventory.remove_item(definition.item_id, 1) != 1:
-		push_warning("ItemDropper: 移除失败（%s）" % definition.item_id)
-		return false
+		return _finish(InteractionResult.failed(
+			InteractionResult.CODE_STATE_MISMATCH, ACTION, actor_id, definition.item_id,
+			"校验通过但移除失败（状态不一致）"
+		))
 	_spawn_pickup(definition, _drop_position())
 	print_debug("[ItemDropper] 放下 %s x1 @ %s" % [definition.item_id, _drop_position()])
-	return true
+	return _finish(InteractionResult.ok(
+		ACTION, actor_id, definition.item_id,
+		"丢下 %s x1" % definition.display_name,
+		{"inventory_id": inventory.inventory_id, "amount": 1}
+	))
 
 
 func _resolve_inventory() -> Inventory:
@@ -108,3 +126,9 @@ func _spawn_pickup(definition: ItemDefinition, pos: Vector3) -> void:
 	pickup.amount = 1
 	world.add_child(pickup)
 	pickup.global_position = pos
+
+
+## 统一出口：广播结果后返回。
+func _finish(result: InteractionResult) -> InteractionResult:
+	EventBus.interaction_result.emit(result)
+	return result

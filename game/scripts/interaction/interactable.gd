@@ -2,7 +2,8 @@ class_name Interactable
 extends Node3D
 ## Interaction：可交互物基类（组件模式）。
 ## 用法：挂到带碰撞体的物理节点（StaticBody3D 等）上并实现 interact()。
-## 子类只需覆写 interact(actor)，可选覆写 can_interact(actor)。
+## Phase 2A 契约：interact() 返回 InteractionResult —— 所有交互经
+## RuleValidator 校验后执行变更，禁止裸 bool 跨系统。
 
 @export_group("Identity")
 @export var interaction_id: StringName = &"interactable"
@@ -19,9 +20,13 @@ func can_interact(_actor: Node3D) -> bool:
 	return true
 
 
-## 执行交互。actor 为交互发起者（通常是玩家根节点）。
-func interact(_actor: Node3D) -> void:
-	push_warning("Interactable(%s): interact() 未实现" % interaction_id)
+## 执行交互（校验 → 变更 → 结果）。actor 为交互发起者（通常是玩家根节点）。
+## 子类必须覆写；未覆写返回 not_implemented。
+func interact(_actor: Node3D) -> InteractionResult:
+	return InteractionResult.failed(
+		InteractionResult.CODE_NOT_IMPLEMENTED, &"interact", interaction_id, &"",
+		"Interactable(%s) 未实现 interact()" % interaction_id
+	)
 
 
 ## 生成当前交互提示数据。

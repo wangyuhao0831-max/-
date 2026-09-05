@@ -61,21 +61,30 @@ Core     EventBus / GameState / DataRegistry /     │
 ## 5. EventBus 约定
 
 - `game/scripts/core/event_bus.gd`：全局单例（autoload），只持有 Signal，不做业务。
-- 信号命名：`snake_case`，语义 = 过去时事件，例：`inventory_changed(inventory)`、`npc_state_changed(npc_id, old, new)`、`order_fulfilled(order_id)`。
+- 信号命名：`snake_case`，语义 = 过去时事件，例：`inventory_changed(inventory)`、`interaction_result(result)`、`npc_state_changed(npc_id, old, new)`、`order_fulfilled(order_id)`。
 - 参数用轻量数据（ID + 值对象），**禁止**传大对象图或 UI 节点。
-- 计划 autoload 注册顺序（Phase 1 落实）：`EventBus → GameState → DataRegistry → GameManager`（先总线后数据，注册顺序写入 TASKS 记录，避免启动竞态）。当前已注册：`EventBus → GameManager`。
+- autoload 注册顺序（已落实）：`EventBus → GameState → DataRegistry → RuleValidator → GameManager`（先总线、再状态注册表、再数据注册表、再验证闸门、最后启动编排；避免启动竞态）。
 - 输入动作：一律定义于 `project.godot` 的 `[input]`（InputMap，数据驱动），代码只引用动作名（`&"interact"` 等），禁止硬编码键位判断。
+
+## 5b. Core Contract Layer（Phase 2A）约定
+
+- **GameState**：运行阶段（boot→playing）+ Inventory/actor 注册表（StringName 键）。只做注册/查询，不承载玩法决策（反 God Object）。
+- **DataRegistry**：Resource 按 `category + StringName id` 注册/查询；启动扫描 `resources/items`、`resources/npcs`；recipe/quest 为预留类别（通用 API 直接可用）。
+- **RuleValidator**：**唯一**行为验证入口（R3）。AI/NPC/玩家一切修改权威状态的交互必须先过对应规则；只裁决、不代行（变更仍由 Godot 调用方执行）。规则用 InteractionResult 返回，禁止裸 bool。
+- **InteractionResult**：success/code/message/actor_id/target_id/action/payload；结果码常量集中在本类（CODE_*）。语义约定：pickup/deliver/drop → actor_id=执行者、target_id=物品 id（deliver 的接收者在 params/target 角色位）；npc_request_item → target_id=NPC id；inventory 查询 → actor_id=inventory_id。
+- **actor 注册**：角色节点（Player/NPC）_ready 以 actor_id 向 GameState 注册并关联其 Inventory（组件自身也注册），退出树自动注销 —— 跨系统按 ID 查询，禁止节点爬取。
+- 类型化引用例外（明确许可）：Core 单例（EventBus/GameState/DataRegistry/RuleValidator）可引用领域 class_name 类型做信号/API 签名 —— 仅全局符号引用，非文件级 import，不构成循环依赖。
 
 ## 6. 模块职责表
 
 | 目录 | 职责 | Phase 1 交付 |
 |---|---|---|
-| `scripts/core` | EventBus / GameState / DataRegistry / GameManager / RuleValidator | ✅ EventBus/GameManager（其余后续 Goal） |
+| `scripts/core` | EventBus / GameState / DataRegistry / GameManager / RuleValidator | ✅（Phase 2A 全部交付） |
 | `scripts/player` | 玩家控制与相机（灰盒验证用） | ✅ |
-| `scripts/interaction` | 可交互物抽象、检测、Prompt 数据 | ✅（InteractionResult 未交付） |
+| `scripts/interaction` | 可交互物抽象、检测、Prompt/Result 契约 | ✅（含 ItemDropper） |
 | `scripts/inventory` | 物品定义、栈、库存容器（玩家+NPC 消费侧） | ✅ |
 | `scripts/ui` | 调试 UI：DebugHUD（只订阅 EventBus 并格式化显示，R8） | ✅ |
-| `scripts/npc` | Profile / RuntimeState / Controller / StateMachine + 状态 | 未开始 |
+| `scripts/npc` | NPCProfile（纯数据 ✅ Phase 2A）；RuntimeState/Controller/StateMachine | 运行态未开始（2B） |
 | `scripts/ai` | AIClient 接口与数据模型 + MockAIClient | 未开始（AI Server 缺席不阻塞） |
 | `scripts/tavern` | 酒馆布局、座位表、门/入口（Phase 1 提供 NPC 流程所需最小子集：座位查找） | Phase 1 最小子集 |
 | `scripts/economy` | 定价/支付结算（NPC Pay 流程所需最小接口） | Phase 1 最小子集 |
@@ -87,7 +96,8 @@ Core     EventBus / GameState / DataRegistry /     │
 
 ## 7. 潜在架构风险登记（多人协作注意）
 
-1. `class_name` 全局命名空间冲突 → 见 CODING_STANDARDS §命名。
-2. `GameState ↔ DataRegistry` 与 `PlayerController ↔ InteractionManager` 的循环依赖倾向 → 依赖方向规则 + code review 把关。
+1. `class_name` 全局命名空间冲突 → 见 CODING_STANDARDS §命名；autoload 脚本禁止再写同名 class_name（Godot 4.7 报 hides an autoload）。
+2. GameState 演进为"万能状态桶"的风险 → 只允许注册表 + 阶段字段，新状态先论证归属。
 3. 真 AI 客户端接入时行为漂移 → Mock 必须实现与接口同语义的确定性行为，接口契约写入 AIRequest/AIResponse 文档注释。
 4. 3D 灰盒场景资源路径硬编码 → 场景通过 `@export` 注入，代码零硬路径（资源 UID 化）。
+5. RuleValidator 规则膨胀 → 规则按 action 收敛；跨域前置校验顺序固定并写入注释（顺序影响结果码可观测性）。

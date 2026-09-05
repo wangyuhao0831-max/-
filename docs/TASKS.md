@@ -8,6 +8,7 @@
 |---|---|---|
 | Phase 0 | Repository Audit + Project Bootstrap | ✅ 完成 |
 | Phase 1 | Vertical Slice Core Framework（Goal 1 完成，NPC 流未开始） | 🔄 进行中 |
+| Phase 2A | Core Contract Layer（GameState / DataRegistry / RuleValidator / InteractionResult） | ✅ 完成 |
 
 ## Phase 0：Repository Audit + Project Bootstrap
 
@@ -30,8 +31,8 @@
 
 ## Phase 1：Vertical Slice Core Framework
 
-**当前里程碑：Goal 1（Core Runtime 灰盒环）—— 已完成（见下）。**
-后续 Goal（NPC 状态流 / 交付 / AI 层 / GameState+DataRegistry+RuleValidator）未开始。
+**当前里程碑：Goal 1（Core Runtime 灰盒环）✅ + Phase 2A（Core Contract Layer）✅ —— 见下。**
+后续 Goal（NPC 运行态状态流 / 交付执行 / AI 层）未开始。
 
 ### Goal 1：Core Runtime（✅ 已完成 2026）
 
@@ -66,17 +67,50 @@
 
 ---
 
+## Phase 2A：Core Contract Layer（✅ 已完成 2026）
+
+> 目标：为后续所有会"修改权威状态"的系统建立统一契约 —— 验证闸门 + 注册/查询 + 结果类型。
+> 范围纪律：不实现 AI Server / LLM / NPC AI / 动态任务 / 复杂经济。
+
+### 交付清单
+
+- [x] **GameState**（autoload）：运行阶段（boot→playing）+ Inventory/actor 注册表（StringName 查询、退出树自动注销、反查）；职责单一，非 God Object
+- [x] **DataRegistry**（autoload）：boot 扫描 `resources/items`（ItemDefinition）与 `resources/npcs`（NPCProfile）；强类型便捷接口 + 通用 register/get 接口；**recipe/quest 为预留类别**（走同一套 API，无需改本类）
+- [x] **NPCProfile**（纯数据 Resource，npc 模块）+ `resources/npcs/npc_tommy.tres`（偏好/性格标签/初始关系）
+- [x] **RuleValidator**（autoload）：统一行为验证入口 —— `validate_pickup` / `validate_deliver` / `validate_npc_request` / `validate_inventory_has` / `validate_inventory_can_receive` + `validate_action`（action+params 统一路由，R3 AI Intent 预留口）。**只裁决不代行**：通过后由 Godot 调用方执行变更
+- [x] **InteractionResult**：success/code/message/actor_id/target_id/action/payload + 全局结果码常量；**跨系统禁止裸 bool 结果**
+- [x] Phase 1 契约化改造：`Interactable.interact()` / `ItemPickup`（校验→add→广播）/ `ItemDropper.try_drop()` 全部返回 InteractionResult 并经 RuleValidator；`Inventory`/`PlayerController` 接入 GameState 注册注销；EventBus 新增 `interaction_result` 信号；DebugHUD 显示最近结果
+- [x] autoload 注册顺序：`EventBus → GameState → DataRegistry → RuleValidator → GameManager`（符合 ARCHITECTURE §5）
+- [x] 自动测试：`game/tests/phase2a_contract_smoke.gd`（`--smoke-contract`）
+
+### Phase 2A 验证协议记录（Godot 4.7.2 console，全部通过）
+
+1. `--headless --import`：无 parse error（曾抓出：嵌套 typed Dictionary 不支持 / Variant 推断警告按错误处理，均已修复）
+2. 主场景 headless 运行 240+ 帧：无运行时错误（scene + Resource load：DataRegistry boot scan 扫描 items/npcs .tres 全部加载成功）
+3. `-- --smoke`（Phase 1 回归）：拾取/放下往返/移动方向 全 PASS —— 无回归
+4. `-- --smoke-contract`：**51 项断言全 PASS**（exit 0）—— GameState 注册/反查/注销生命周期、DataRegistry 扫描/预留类别、InteractionResult 结构、RuleValidator 4 规则正/负例 + 统一路由
+5. **待手动验收**：HUD"最近结果"文案 / 在无库存时按 Q 无报错提示体验
+
+### Phase 2A 已记录的实现教训
+
+- **Godot 不支持嵌套 typed 集合**（`Dictionary[StringName, Dictionary[StringName, Resource]]` 报 Parse Error）→ 内层用普通 Dictionary + 强类型接口收口
+- 部分 warning 在本工程按 error 处理（4.7 严格模式）：`var x := dict.get(...)` 推断 Variant 会直接编译失败 → 显式标注类型
+- RuleValidator 校验顺序会影响可观测结果码（如 deliver 先查"交付者持有量"再查"接收者容量"）→ 测试需按真实分支构造场景（曾把 6337 件交付当成容量测试，实际命中持有量不足分支）
+- autoload 脚本编译失败会级联报"Failed to compile depended scripts"到所有引用方 → 先修根因文件再复查
+
+---
+
 ### Phase 1 后续（未开始，规划清单）
 
 **范围**：以下模块 + NPC 完整状态流，配合灰盒酒馆场景（可复用桌面素材）。验收 = 用户侧一条完整流程：
 
 > 玩家进灰盒酒馆 → 移动/观察 → 交互拾取酒瓶 → Inventory 更新 → NPC 进入酒馆 → 找座 → 坐下 → 生成订单 → 玩家交付指定物品 → NPC 消费完成 → 离开。
 
-### Core（game/scripts/core）
+### Core（game/scripts/core）✅ Phase 2A 交付
 
-- [ ] `GameState`（世界状态唯一权威容器；Goal 2 引入）
-- [ ] `DataRegistry`（数据驱动注册表：物品/NPC 定义等；Goal 2 引入）
-- [ ] `RuleValidator`（AI Intent 校验闸门 —— R3 前置依赖；AI Goal 引入）
+- [x] `GameState`（注册表 + 运行阶段，Phase 2A 交付）
+- [x] `DataRegistry`（物品/NPC 档案注册查询，recipe/quest 预留，Phase 2A 交付）
+- [x] `RuleValidator`（统一验证闸门 + validate_action 路由，R3 前置依赖就绪，Phase 2A 交付）
 
 ### Player（game/scripts/player）✅ Goal 1 已完成
 
@@ -88,8 +122,9 @@
 - [x] `Interactable`（可交互组件基类）
 - [x] `InteractionManager`（检测 + 广播 prompt）
 - [x] `InteractionPrompt`（**纯数据**，禁 UI 依赖）
-- [x] `ItemPickup`（世界拾取物，Goal 1 新增）
-- [ ] `InteractionResult`（交付/NPC 流程引入）
+- [x] `ItemPickup`（世界拾取物，Goal 1 新增；Phase 2A 起经 RuleValidator）
+- [x] `ItemDropper`（Q 放下，Goal 1；Phase 2A 起经 RuleValidator 返回 InteractionResult）
+- [x] `InteractionResult`（统一交互结果 + 结果码，Phase 2A 交付）
 
 ### Inventory（game/scripts/inventory）✅ Goal 1 已完成
 
@@ -106,7 +141,7 @@
 
 ### NPC（game/scripts/npc）
 
-- [ ] `NPCProfile`（Resource 数据）
+- [x] `NPCProfile`（纯数据 Resource，Phase 2A 交付 + 示例 .tres）
 - [ ] `NPCRuntimeState`（运行态，可序列化候选）
 - [ ] `NPCController`（Game Brain：驱动状态机 + 校验应用 AI 建议）
 - [ ] `NPCStateMachine` + 状态：`Idle → EnterTavern → FindSeat → WalkToSeat → Sit → Order → WaitDrink → Drink → Talk → Pay → Leave`

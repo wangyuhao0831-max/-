@@ -1,8 +1,15 @@
 class_name PlayerController
 extends CharacterBody3D
 ## Player：玩家角色控制（WASD 相对相机移动；相机视角由 CameraController 负责）。
-## 交互输入（E）与目标检测由 InteractionManager 负责，本类不持有交互逻辑。
+## 交互输入（E）与目标检测由 InteractionManager 负责；放下（Q）由 ItemDropper 负责，
+## 本类不持有交互逻辑。
+## Phase 2A：启动时以 actor_id 向 GameState 注册（actor -> Inventory 关联），
+## 供 RuleValidator/跨系统按 StringName 查询；退出树自动注销。
 ## 事件：Inventory 变化时转发到 EventBus.inventory_changed（R6）。
+
+@export_group("Identity")
+## 玩家 actor id（全局唯一，GameState 注册键）。
+@export var actor_id: StringName = &"player"
 
 @export_group("Movement")
 @export var move_speed: float = 5.0
@@ -25,6 +32,16 @@ func _ready() -> void:
 		_inventory.changed.connect(_on_inventory_changed)
 	else:
 		push_warning("PlayerController: 未找到 Inventory 子节点，库存事件不会广播")
+	GameState.register_actor(actor_id, _inventory.inventory_id if _inventory != null else &"")
+
+
+func _exit_tree() -> void:
+	GameState.unregister_actor(actor_id)
+
+
+## 返回本玩家 actor id（交付/请求等跨系统交互使用）。
+func get_actor_id() -> StringName:
+	return actor_id
 
 
 ## 返回本玩家持有的库存（供后续交付流程使用）；可能为 null。

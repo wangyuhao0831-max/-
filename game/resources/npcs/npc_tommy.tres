@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="NPCProfile" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://game/scripts/npc/npc_profile.gd" id="1_profile"]
+
+[resource]
+script = ExtResource("1_profile")
+npc_id = &"npc_tommy"
+display_name = "汤米（矮人酒客）"
+description = "灰盒测试 NPC：常住酒馆的矮人，偏好麦酒。Phase 2B 起接入状态机。"
+preferred_item_ids = Array[StringName]([&"item_bottle_ale"])
+personality_tags = Array[StringName]([&"dwarf", &"gruff", &"generous"])
+relationship_start = 5

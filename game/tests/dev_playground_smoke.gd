@@ -77,8 +77,9 @@ func run(driver: Node) -> void:
 	if dropper == null:
 		_fail(tree, "ItemDropper 未找到")
 		return
-	if not dropper.try_drop():
-		_fail(tree, "try_drop() 返回 false")
+	var drop_result := dropper.try_drop()
+	if drop_result == null or not drop_result.success:
+		_fail(tree, "try_drop() 失败：%s" % ("" if drop_result == null else drop_result.to_text()))
 		return
 	await tree.process_frame
 	await tree.process_frame

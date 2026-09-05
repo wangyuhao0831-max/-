@@ -13,3 +13,6 @@ signal interaction_prompt_changed(prompt: InteractionPrompt)
 
 ## 某个 Inventory 的内容发生变化（携带引用，供 HUD/后续系统刷新显示）。
 signal inventory_changed(inventory: Inventory)
+
+## 一次交互结束（成功或失败皆广播；由执行方发出，UI/日志订阅做反馈）。
+signal interaction_result(result: InteractionResult)
