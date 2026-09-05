@@ -65,4 +65,4 @@ $gd = 'D:\Godot\Godot_v4.7.2-stable_win64_console.exe'
 & $gd --headless --path . --quit-after 900 -- --smoke
 ```
 
-运行方式：Godot 4.7.2 打开 `project.godot` → F5。操作：WASD 移动、鼠标视角（左键捕获 / Esc 释放）、走到吧台对准酒瓶按 **E** 拾取（DebugHUD 左下角显示库存）。
+运行方式：Godot 4.7.2 打开 `project.godot` → F5。操作：WASD 移动、鼠标视角（左键捕获 / Esc 释放）、对准物品按 **E** 拾取、按 **Q** 丢下 1 件（丢回世界可再拾取；DebugHUD 左下角显示库存）。

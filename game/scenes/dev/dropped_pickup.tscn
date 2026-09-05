@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://game/scripts/interaction/item_pickup.gd" id="1_pick"]
+
+[sub_resource type="StandardMaterial3D" id="MatAmber"]
+albedo_color = Color(0.93, 0.68, 0.25, 1)
+roughness = 0.3
+
+[sub_resource type="CylinderMesh" id="MeshBottle"]
+top_radius = 0.06
+bottom_radius = 0.12
+height = 0.5
+radial_segments = 12
+
+[sub_resource type="CylinderShape3D" id="ShapeBottle"]
+radius = 0.11
+height = 0.5
+
+[node name="DroppedItem" type="StaticBody3D"]
+collision_layer = 3
+script = ExtResource("1_pick")
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("MeshBottle")
+material_override = SubResource("MatAmber")
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+shape = SubResource("ShapeBottle")

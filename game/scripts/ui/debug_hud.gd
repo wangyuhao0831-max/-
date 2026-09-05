@@ -65,7 +65,7 @@ func _refresh_text() -> void:
 	else:
 		lines.append("库存: 未连接")
 	lines.append("")
-	lines.append("WASD 移动 | 鼠标视角 | 左键捕获鼠标 | Esc 释放 | E 交互")
+	lines.append("WASD 移动 | 鼠标视角 | 左键捕获鼠标 | Esc 释放 | E 拾取 | Q 丢下")
 	_label.text = "\n".join(lines)
 
 

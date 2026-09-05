@@ -40,19 +40,19 @@
 
 - [x] **Core**：`EventBus`（autoload 纯信号总线）、`GameManager`（autoload 启动编排）
 - [x] **Player**：`PlayerController`（WASD 相对相机移动）、`CameraController`（鼠标视角/捕获/Esc 释放）
-- [x] **Interaction**：`Interactable`（组件基类）、`InteractionManager`（相机射线检测+layer2 专用层）、`InteractionPrompt`（纯数据）、`ItemPickup`（世界拾取物）
-- [x] **Inventory**：`ItemDefinition`（Resource）、`ItemStack`、`Inventory`（Node 组件）+ `game/resources/items/bottle_ale.tres`
+- [x] **Interaction**：`Interactable`（组件基类）、`InteractionManager`（相机射线检测+layer2 专用层）、`InteractionPrompt`（纯数据）、`ItemPickup`（世界拾取物）、`ItemDropper`（Q 键放下：库存→世界，贴面生成，可再拾回）
+- [x] **Inventory**：`ItemDefinition`（Resource）、`ItemStack`、`Inventory`（Node 组件）+ `bottle_ale.tres` / `wooden_mug.tres`
 - [x] **UI（调试）**：`DebugHUD`（CanvasLayer，仅订阅 EventBus，R8）+ `--smoke` headless 验收入口
-- [x] **灰盒场景**：`game/scenes/dev/dev_playground.tscn`（地面/吧台/酒瓶×3/出生点；Primitive Mesh）
-- [x] InputMap 动作数据驱动（project.godot [input]：move_forward/back/left/right、interact）
+- [x] **灰盒场景**：`game/scenes/dev/dev_playground.tscn`（地面/吧台/拾取物×5/出生点；Primitive Mesh）+ `dropped_pickup.tscn` 放下物模板（占位视觉）
+- [x] InputMap 动作数据驱动（project.godot [input]：move_forward/back/left/right、interact、drop_item）
 - [x] autoload 注册：`EventBus → GameManager`（顺序符合 ARCHITECTURE §5）
 
 #### Goal 1 验证协议记录（Godot 4.7.2 console，全部通过）
 
 1. `--headless --import`：无 parse error / script error
 2. 主场景 headless 运行 240+ 帧：无运行时错误
-3. `--headless -- --smoke` 自动化断言：场景加载 ✓ / 拾取 ×3 ✓ / 同 ID 合并 1 堆叠 ✓ / EventBus.inventory_changed 广播 ×3 ✓（exit 0）
-4. **待手动验收**（headless 无法模拟真实输入）：WASD 手感 / 鼠标视角方向 / E 射线命中拾取 / DebugHUD 显示
+3. `--headless -- --smoke` 自动化断言：场景加载 ✓ / 拾取 5 件（酒瓶×3+木杯×2）✓ / 按 ID 合并 2 堆叠 ✓ / EventBus.inventory_changed 广播 ✓ / **放下往返 ✓（Q：酒瓶 3→2→3，世界生成→拾回→无残留）** / 移动方向 ✓（W=-Z / S=+Z，exit 0）
+4. **待手动验收**（headless 无法模拟真实输入）：WASD 手感 / 鼠标视角方向 / E 射线命中拾取 / Q 放下位置与再拾取 / DebugHUD 显示
 
 #### Goal 1 已记录的实现教训（供后续参考）
 
