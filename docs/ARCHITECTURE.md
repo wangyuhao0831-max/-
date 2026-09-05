@@ -61,20 +61,22 @@ Core     EventBus / GameState / DataRegistry /     │
 ## 5. EventBus 约定
 
 - `game/scripts/core/event_bus.gd`：全局单例（autoload），只持有 Signal，不做业务。
-- 信号命名：`snake_case`，语义 = 过去时事件，例：`inventory_changed(stack_id)`、`npc_state_changed(npc_id, old, new)`、`order_fulfilled(order_id)`。
+- 信号命名：`snake_case`，语义 = 过去时事件，例：`inventory_changed(inventory)`、`npc_state_changed(npc_id, old, new)`、`order_fulfilled(order_id)`。
 - 参数用轻量数据（ID + 值对象），**禁止**传大对象图或 UI 节点。
-- 计划 autoload 注册顺序（Phase 1 落实）：`EventBus → GameState → DataRegistry → GameManager`（先总线后数据，注册顺序写入 TASKS 记录，避免启动竞态）。
+- 计划 autoload 注册顺序（Phase 1 落实）：`EventBus → GameState → DataRegistry → GameManager`（先总线后数据，注册顺序写入 TASKS 记录，避免启动竞态）。当前已注册：`EventBus → GameManager`。
+- 输入动作：一律定义于 `project.godot` 的 `[input]`（InputMap，数据驱动），代码只引用动作名（`&"interact"` 等），禁止硬编码键位判断。
 
 ## 6. 模块职责表
 
 | 目录 | 职责 | Phase 1 交付 |
 |---|---|---|
-| `scripts/core` | EventBus / GameState / DataRegistry / GameManager / RuleValidator | ✓ |
-| `scripts/player` | 玩家控制与相机（灰盒验证用） | ✓ |
-| `scripts/interaction` | 可交互物抽象、检测、Prompt/Result 数据 | ✓ |
-| `scripts/inventory` | 物品定义、栈、库存容器（玩家+NPC 消费侧） | ✓ |
-| `scripts/npc` | Profile / RuntimeState / Controller / StateMachine + 状态 | ✓ |
-| `scripts/ai` | AIClient 接口与数据模型 + MockAIClient | ✓ |
+| `scripts/core` | EventBus / GameState / DataRegistry / GameManager / RuleValidator | ✅ EventBus/GameManager（其余后续 Goal） |
+| `scripts/player` | 玩家控制与相机（灰盒验证用） | ✅ |
+| `scripts/interaction` | 可交互物抽象、检测、Prompt 数据 | ✅（InteractionResult 未交付） |
+| `scripts/inventory` | 物品定义、栈、库存容器（玩家+NPC 消费侧） | ✅ |
+| `scripts/ui` | 调试 UI：DebugHUD（只订阅 EventBus 并格式化显示，R8） | ✅ |
+| `scripts/npc` | Profile / RuntimeState / Controller / StateMachine + 状态 | 未开始 |
+| `scripts/ai` | AIClient 接口与数据模型 + MockAIClient | 未开始（AI Server 缺席不阻塞） |
 | `scripts/tavern` | 酒馆布局、座位表、门/入口（Phase 1 提供 NPC 流程所需最小子集：座位查找） | Phase 1 最小子集 |
 | `scripts/economy` | 定价/支付结算（NPC Pay 流程所需最小接口） | Phase 1 最小子集 |
 | `scripts/time` | 游戏时钟（NPC 节奏可 Mock） | 占位（Phase 1 不强制） |

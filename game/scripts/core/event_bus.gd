@@ -1,0 +1,15 @@
+extends Node
+## Core：全局事件总线（架构规则 R6）。
+## 只声明信号、不做任何业务逻辑；所有跨系统事件经由此总线广播。
+## 依赖方向：EventBus 不依赖业务实现，仅引用领域数据类型（class_name 全局符号）。
+## 注：无 class_name —— 以 autoload 名 EventBus 作为全局访问符号
+## （Godot 4.7 禁止全局类名与 autoload 同名）。
+
+## 游戏启动引导完成（由 GameManager 发出；参数为启动时刻毫秒）。
+signal game_booted(boot_time_msec: int)
+
+## 当前可交互目标发生变化。prompt 为 null 表示没有可交互目标（UI 应清空提示）。
+signal interaction_prompt_changed(prompt: InteractionPrompt)
+
+## 某个 Inventory 的内容发生变化（携带引用，供 HUD/后续系统刷新显示）。
+signal inventory_changed(inventory: Inventory)

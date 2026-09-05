@@ -2,7 +2,7 @@
 
 3D AI 魔法酒馆经营 / 社交模拟游戏 —— Vertical Slice 基础架构（Godot 4.7.x / GDScript 严格类型）。
 
-> **当前阶段：Phase 0 完成（Repository Bootstrap）。** 本仓库承载工程骨架、目录约定、docs 基线与验收清单；游戏代码（Phase 1 Core Framework）尚未开始。
+> **当前阶段：Phase 1 / Goal 1 完成（Core Runtime 灰盒环）。** 启动→出生→WASD 移动→鼠标视角→E 拾取→Inventory 更新已可运行（DevPlayground 灰盒场景）。
 > 详细进度见 [`docs/TASKS.md`](docs/TASKS.md)。
 
 ## 铁律（摘要，完整约束见 docs/ARCHITECTURE.md）
@@ -20,23 +20,24 @@
 project root  = res:// 根（Godot 工程根）
 ├─ game/
 │  ├─ scripts/          # 全部游戏代码（GDScript，模块化小文件）
-│  │  ├─ core/          # GameManager / EventBus / GameState / DataRegistry
-│  │  ├─ player/        # PlayerController / CameraController
-│  │  ├─ interaction/   # Interactable / InteractionManager / Prompt / Result
-│  │  ├─ inventory/     # ItemDefinition / ItemStack / Inventory
-│  │  ├─ npc/           # NPCProfile / NPCRuntimeState / NPCController / NPCStateMachine
-│  │  ├─ tavern/        # 酒馆空间与座位等（Phase 1 范围外模块，占位）
+│  │  ├─ core/          # EventBus / GameManager（autoload；GameState 等后续 Goal）
+│  │  ├─ player/        # PlayerController / CameraController ✅
+│  │  ├─ interaction/   # Interactable / InteractionManager / Prompt / ItemPickup ✅
+│  │  ├─ inventory/     # ItemDefinition / ItemStack / Inventory ✅
+│  │  ├─ npc/           # NPCProfile / NPCRuntimeState / NPCController / NPCStateMachine（占位）
+│  │  ├─ tavern/        # 酒馆空间与座位等（占位）
 │  │  ├─ economy/       # 经济（占位）
 │  │  ├─ time/          # 时间（占位）
 │  │  ├─ quest/         # 任务（占位）
 │  │  ├─ save/          # 存档（占位）
-│  │  └─ ai/            # AIClient 接口 / AIRequest / AIResponse / AIIntent / MockAIClient
-│  ├─ scenes/           # 场景（main 等）
-│  ├─ resources/        # 数据驱动配置（.tres 等）
-│  └─ tests/            # headless 自动化测试脚本（Phase 1 起）
+│  │  ├─ ai/            # AIClient 接口 / MockAIClient（后续 Goal）
+│  │  └─ ui/            # DebugHUD（调试 UI，仅订阅 EventBus，R8）
+│  ├─ scenes/           # 场景（dev/dev_playground.tscn = 当前主场景）
+│  ├─ resources/        # 数据驱动配置（.tres，如 items/bottle_ale.tres）
+│  └─ tests/            # headless 自动化冒烟测试（--smoke）
 ├─ docs/                # 工程文档（架构 / 编码规范 / TASKS 验收）
 ├─ icon.svg
-└─ project.godot        # Godot 4.7（config_version=5）
+└─ project.godot        # Godot 4.7（config_version=5；autoload + InputMap）
 ```
 
 ## 文档索引
@@ -51,3 +52,17 @@ project root  = res:// 根（Godot 工程根）
 
 - Godot **4.7.2 stable**（Windows：`D:\Godot\Godot_v4.7.2-stable_win64_console.exe` 可用于 headless 校验）
 - git + GitHub CLI（推送至 `wangyuhao0831-max/-`）
+
+## 本地验证命令（每次改代码后执行）
+
+```powershell
+$gd = 'D:\Godot\Godot_v4.7.2-stable_win64_console.exe'
+# 1) 全量解析/导入检查（parser + broken resource）
+& $gd --headless --import --path .
+# 2) 主场景运行冒烟（DevPlayground）
+& $gd --headless --path . --quit-after 240
+# 3) 自动化交互链路断言（拾取 → Inventory → EventBus 广播）
+& $gd --headless --path . --quit-after 900 -- --smoke
+```
+
+运行方式：Godot 4.7.2 打开 `project.godot` → F5。操作：WASD 移动、鼠标视角（左键捕获 / Esc 释放）、走到吧台对准酒瓶按 **E** 拾取（DebugHUD 左下角显示库存）。

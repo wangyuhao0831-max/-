@@ -7,7 +7,7 @@
 | 阶段 | 名称 | 状态 |
 |---|---|---|
 | Phase 0 | Repository Audit + Project Bootstrap | ✅ 完成 |
-| Phase 1 | Vertical Slice Core Framework（Core/Player/Interaction/Inventory/AI/NPC） | ⬜ 未开始 |
+| Phase 1 | Vertical Slice Core Framework（Goal 1 完成，NPC 流未开始） | 🔄 进行中 |
 
 ## Phase 0：Repository Audit + Project Bootstrap
 
@@ -28,7 +28,42 @@
 
 ---
 
-## Phase 1：Vertical Slice Core Framework（规划 —— 未开始）
+## Phase 1：Vertical Slice Core Framework
+
+**当前里程碑：Goal 1（Core Runtime 灰盒环）—— 已完成（见下）。**
+后续 Goal（NPC 状态流 / 交付 / AI 层 / GameState+DataRegistry+RuleValidator）未开始。
+
+### Goal 1：Core Runtime（✅ 已完成 2026）
+
+> 启动 → 出生 → WASD 移动 → 鼠标视角 → E 检测 Interactable → 拾取 Item → Inventory 更新
+> 范围纪律：不做 AI Server、不做正式美术、仅 Godot Core Runtime + Primitive Mesh。
+
+- [x] **Core**：`EventBus`（autoload 纯信号总线）、`GameManager`（autoload 启动编排）
+- [x] **Player**：`PlayerController`（WASD 相对相机移动）、`CameraController`（鼠标视角/捕获/Esc 释放）
+- [x] **Interaction**：`Interactable`（组件基类）、`InteractionManager`（相机射线检测+layer2 专用层）、`InteractionPrompt`（纯数据）、`ItemPickup`（世界拾取物）
+- [x] **Inventory**：`ItemDefinition`（Resource）、`ItemStack`、`Inventory`（Node 组件）+ `game/resources/items/bottle_ale.tres`
+- [x] **UI（调试）**：`DebugHUD`（CanvasLayer，仅订阅 EventBus，R8）+ `--smoke` headless 验收入口
+- [x] **灰盒场景**：`game/scenes/dev/dev_playground.tscn`（地面/吧台/酒瓶×3/出生点；Primitive Mesh）
+- [x] InputMap 动作数据驱动（project.godot [input]：move_forward/back/left/right、interact）
+- [x] autoload 注册：`EventBus → GameManager`（顺序符合 ARCHITECTURE §5）
+
+#### Goal 1 验证协议记录（Godot 4.7.2 console，全部通过）
+
+1. `--headless --import`：无 parse error / script error
+2. 主场景 headless 运行 240+ 帧：无运行时错误
+3. `--headless -- --smoke` 自动化断言：场景加载 ✓ / 拾取 ×3 ✓ / 同 ID 合并 1 堆叠 ✓ / EventBus.inventory_changed 广播 ×3 ✓（exit 0）
+4. **待手动验收**（headless 无法模拟真实输入）：WASD 手感 / 鼠标视角方向 / E 射线命中拾取 / DebugHUD 显示
+
+#### Goal 1 已记录的实现教训（供后续参考）
+
+- Godot 4.7 禁止 class_name 与 autoload 单例同名 → autoload 脚本不写 class_name
+- `get_node_or_null()` 参数为 NodePath：传字符串字面量可隐式转换，传 `&"..."`（StringName）报 Parse Error
+- RefCounted 协程 await 挂起期间必须持有引用（否则静默中断）
+- GDScript lambda 按值捕获局部变量 → 跨回调计数用成员变量
+
+---
+
+### Phase 1 后续（未开始，规划清单）
 
 **范围**：以下模块 + NPC 完整状态流，配合灰盒酒馆场景（可复用桌面素材）。验收 = 用户侧一条完整流程：
 
@@ -36,29 +71,28 @@
 
 ### Core（game/scripts/core）
 
-- [ ] `GameManager`（启动编排 + 生命周期，非 God Object）
-- [ ] `EventBus`（autoload，纯信号总线）
-- [ ] `GameState`（世界状态唯一权威容器）
-- [ ] `DataRegistry`（数据驱动注册表：物品/NPC 定义等）
-- [ ] `RuleValidator`（AI Intent 校验闸门 —— R3 前置依赖）
+- [ ] `GameState`（世界状态唯一权威容器；Goal 2 引入）
+- [ ] `DataRegistry`（数据驱动注册表：物品/NPC 定义等；Goal 2 引入）
+- [ ] `RuleValidator`（AI Intent 校验闸门 —— R3 前置依赖；AI Goal 引入）
 
-### Player（game/scripts/player）
+### Player（game/scripts/player）✅ Goal 1 已完成
 
-- [ ] `PlayerController`（3D 移动）
-- [ ] `CameraController`（观察/第三人称跟随）
+- [x] `PlayerController`（3D 移动）
+- [x] `CameraController`（观察/第三人称跟随 → 当前为鼠标视角灰盒版）
 
-### Interaction（game/scripts/interaction）
+### Interaction（game/scripts/interaction）Goal 1 已完成
 
-- [ ] `Interactable`（可交互组件基类）
-- [ ] `InteractionManager`（检测 + 广播 prompt）
-- [ ] `InteractionPrompt`（**纯数据**，禁 UI 依赖）
-- [ ] `InteractionResult`（交互结果数据）
+- [x] `Interactable`（可交互组件基类）
+- [x] `InteractionManager`（检测 + 广播 prompt）
+- [x] `InteractionPrompt`（**纯数据**，禁 UI 依赖）
+- [x] `ItemPickup`（世界拾取物，Goal 1 新增）
+- [ ] `InteractionResult`（交付/NPC 流程引入）
 
-### Inventory（game/scripts/inventory）
+### Inventory（game/scripts/inventory）✅ Goal 1 已完成
 
-- [ ] `ItemDefinition`（Resource）
-- [ ] `ItemStack`
-- [ ] `Inventory`（含事件广播，供 NPC 交付/消费复用）
+- [x] `ItemDefinition`（Resource）
+- [x] `ItemStack`
+- [x] `Inventory`（含事件广播，供 NPC 交付/消费复用）
 
 ### AI（game/scripts/ai）
 
@@ -81,7 +115,8 @@
 
 ### Phase 1 收尾
 
-- [ ] 灰盒场景串通（占位模型 + 灰盒材质）
+- [x] Goal 1 灰盒场景串通（DevPlayground：Primitive Mesh + 灰盒材质）✅
+- [ ] NPC 全流程灰盒串通（后续 Goal）
 - [ ] 验证协议全项通过（parser / broken resource / scene load / 核心流程冒烟）
 - [ ] 本文件更新为 Phase 1 ✅
 
