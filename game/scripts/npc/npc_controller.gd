@@ -227,8 +227,17 @@ func _physics_process(delta: float) -> void:
 			# 注意：必须按 order_id 全阶段查询（get_open_order 只含 OPEN，
 			# 交付后订单为 FULFILLED，用它会永远等不到）。
 			var order := _order_manager.get_order(_runtime.order_id) if _order_manager != null else null
-			if order != null and order.phase == Order.Phase.FULFILLED:
-				_change_to(NPCStateMachine.S_PAY)
+			if order != null:
+				if order.phase == Order.Phase.FULFILLED:
+					_change_to(NPCStateMachine.S_PAY)
+				elif order.phase == Order.Phase.FAILED:
+					_change_to(NPCStateMachine.S_LEAVE)
+				elif order.phase == Order.Phase.OPEN \
+						and GameClock.current_day_seconds >= order.expires_at_seconds:
+					# Phase 2C：交付超时 → 订单失败 → 顾客放弃离开。
+					print_debug("[NPC] %s 等待超时，放弃订单 %s" % [get_npc_id(), order.order_id])
+					_order_manager.mark_failed(order.order_id)
+					_change_to(NPCStateMachine.S_LEAVE)
 		NPCStateMachine.S_PAY:
 			if not _pay_done:
 				_pay_done = true

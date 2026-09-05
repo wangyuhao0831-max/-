@@ -18,6 +18,8 @@ extends Resource
 @export_group("Economy")
 ## 单价（金币；订单结算使用，酒馆数据）。
 @export_range(0, 9999, 1) var price: int = 0
+## 成本（金币；日结算 cost/profit 记账口径，Phase 2C 不从金币扣除）。
+@export_range(0, 9999, 1) var cost: int = 0
 
 
 ## 是否是同一物品（按 item_id 比较）。

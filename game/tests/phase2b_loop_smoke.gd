@@ -35,6 +35,13 @@ func run(driver: Node) -> void:
 		_finish(tree, "CustomerSpawner 未找到")
 		return
 	spawner.auto_spawn = false
+	# Phase 2C：顾客生成受营业窗口管制 —— 先开张（跳到 Service）。
+	DayManager.debug_start_service()
+	await tree.physics_frame
+	await tree.physics_frame
+	if DayManager.phase != DayManager.PHASE_SERVICE:
+		_finish(tree, "开张失败（phase=%s）" % DayManager.phase)
+		return
 	EventBus.npc_left.connect(
 		func(npc_id: StringName) -> void:
 			_npc_left_ids.append(npc_id)

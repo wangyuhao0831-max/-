@@ -37,6 +37,8 @@ func _process(delta: float) -> void:
 		return
 	if _active_npc != null:
 		return
+	if not DayManager.can_spawn_customer():
+		return
 	_auto_timer -= delta
 	if _auto_timer <= 0.0:
 		_auto_timer = respawn_delay
@@ -44,8 +46,12 @@ func _process(delta: float) -> void:
 
 
 ## 生成下一位顾客（profile_ids 队列轮转）；失败返回 null。
+## 营业闸门：仅 DayManager.can_spawn_customer()（Service 且未到关门前窗口）允许。
 ## 测试可直接调用：同批 NPC 依队列顺序为 tommy → grimble → tommy → …
 func spawn_customer() -> NPCController:
+	if not DayManager.can_spawn_customer():
+		print_debug("[CustomerSpawner] 拒绝生成：未营业或临近关门（phase=%s）" % DayManager.phase)
+		return null
 	if _active_npc != null and is_instance_valid(_active_npc):
 		push_warning("CustomerSpawner: 已有顾客在场（%s），拒绝生成" % _active_npc.get_npc_id())
 		return null
@@ -75,6 +81,7 @@ func spawn_customer() -> NPCController:
 	zone.add_child(npc)
 	npc.global_position = spawn_position
 	_active_npc = npc
+	EventBus.npc_entered.emit(profile_id)
 	print_debug("[CustomerSpawner] 生成 %s @ %s" % [profile_id, spawn_position])
 	return npc
 

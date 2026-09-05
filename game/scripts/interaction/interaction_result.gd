@@ -36,6 +36,8 @@ const CODE_SEAT_TAKEN := &"seat_taken"
 ## 无空闲座位。
 const CODE_NO_SEAT := &"no_seat"
 const CODE_SEAT_NOT_RESERVED := &"seat_not_reserved"
+## 文件/IO 失败（存档等）。
+const CODE_IO_ERROR := &"io_error"
 
 ## 是否成功。
 var success := false

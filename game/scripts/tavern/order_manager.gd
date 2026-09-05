@@ -9,6 +9,9 @@ extends Node
 
 const ACTION_CREATE := &"order_create"
 
+## 订单超时（GameClock 秒；OPEN 超时未交付 → 失败，声望 -，NPC 离场）。
+@export var order_ttl_seconds: float = 40.0
+
 var _orders: Dictionary[StringName, Order] = {}
 var _seq := 0
 
@@ -43,6 +46,7 @@ func create_order(npc_id: StringName, item_id: StringName, amount: int = 1) -> I
 	order.unit_price = definition.price
 	order.total_price = total
 	order.created_at_msec = Time.get_ticks_msec()
+	order.expires_at_seconds = GameClock.current_day_seconds + order_ttl_seconds
 	_orders[order.order_id] = order
 	EventBus.order_created.emit(order)
 	print_debug("[OrderManager] %s" % order.to_text())
@@ -113,7 +117,25 @@ func all_orders() -> Array[Order]:
 	return out
 
 
-## 进行中订单数（调试/测试）。
+## 订单超时失败：OPEN → FAILED（声望 -，NPC 离开；由 NPC 超时轮询调用）。
+func mark_failed(order_id: StringName) -> InteractionResult:
+	var order := get_order(order_id)
+	if order == null:
+		return InteractionResult.failed(
+			InteractionResult.CODE_ORDER_NOT_FOUND, &"order_fail", &"", order_id,
+			"订单不存在：%s" % order_id)
+	if order.phase != Order.Phase.OPEN:
+		return InteractionResult.failed(
+			InteractionResult.CODE_ORDER_NOT_OPEN, &"order_fail", order.npc_id, order_id,
+			"订单不在可失败阶段（%s）" % order.phase_text())
+	order.phase = Order.Phase.FAILED
+	EventBus.order_failed.emit(order)
+	print_debug("[OrderManager] %s 超时失败" % order.to_text())
+	return InteractionResult.ok(&"order_fail", order.npc_id, order_id, "订单已标记失败",
+			{"order_id": order.order_id})
+
+
+## 进行中（OPEN）订单数（调试/测试）。
 func open_order_count() -> int:
 	var n := 0
 	for order in _orders.values():

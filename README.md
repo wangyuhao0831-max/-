@@ -2,7 +2,7 @@
 
 3D AI 魔法酒馆经营 / 社交模拟游戏 —— Vertical Slice 基础架构（Godot 4.7.x / GDScript 严格类型）。
 
-> **当前阶段：Phase 0–2B 完成。** Phase 1 灰盒可玩环 + Phase 2A Core Contract Layer + Phase 2B 顾客最小循环（NPC 进店→找座→下单→玩家交付→付款→饮用→离场→座位释放，两 NPC 复用同一座位自动验证）已就绪。
+> **当前阶段：Phase 0–2C 完成（Vertical Slice Stabilization）。** 可连续游玩 5–10 分钟的完整最小循环：营业日（StartDay→OpenTavern→Service→CloseTavern→DaySummary→NextDay）、顾客流、订单成功/失败、金币/成本/利润、声望、日结算、自动存档、调试面板/时间倍率。
 > 详细进度见 [`docs/TASKS.md`](docs/TASKS.md)。
 
 ## 铁律（摘要，完整约束见 docs/ARCHITECTURE.md）
@@ -25,16 +25,16 @@ project root  = res:// 根（Godot 工程根）
 │  │  ├─ interaction/   # Interactable / InteractionManager / Prompt / Result / ItemPickup / ItemDropper / NpcDelivery ✅
 │  │  ├─ inventory/     # ItemDefinition / ItemStack / Inventory ✅
 │  │  ├─ npc/           # NPCProfile / NPCRuntimeState / NPCController / NPCStateMachine ✅（2B 顾客环）
-│  │  ├─ tavern/        # TavernSeat / SeatManager / Order / OrderManager / CustomerSpawner ✅（2B）
+│  │  ├─ tavern/        # TavernSeat/SeatManager/Order/OrderManager/CustomerSpawner ✅（2B）+ DayManager/DaySummary ✅（2C）
 │  │  ├─ economy/       # Transaction（最小交易）✅（2B）
-│  │  ├─ time/          # 时间（占位）
+│  │  ├─ time/          # GameClock（时间倍率/暂停/营业日秒）✅（2C）
 │  │  ├─ quest/         # 任务（占位）
-│  │  ├─ save/          # 存档（占位）
+│  │  ├─ save/          # SaveManager（最小 JSON 存档）✅（2C）
 │  │  ├─ ai/            # AIClient 接口 / MockAIClient（后续 Goal；NPC 决策点已预留）
-│  │  └─ ui/            # DebugHUD（调试 UI，仅订阅 EventBus，R8）
+│  │  └─ ui/            # DebugHUD + DebugPanel（调试 UI；仅订阅/按钮驱动，R8）
 │  ├─ scenes/           # 场景（dev/：dev_playground 主场景 + npc_customer 模板 + dropped_pickup）
 │  ├─ resources/        # 数据驱动配置：items/*.tres、npcs/*.tres（DataRegistry 启动扫描）
-│  └─ tests/            # headless 自动化测试（--smoke / --smoke-contract / --smoke-loop）
+│  └─ tests/            # headless 自动化测试（--smoke / --smoke-contract / --smoke-loop / --smoke-days）
 ├─ docs/                # 工程文档（架构 / 编码规范 / TASKS 验收）
 ├─ icon.svg
 └─ project.godot        # Godot 4.7（config_version=5；autoload×5 + InputMap）
@@ -67,6 +67,9 @@ $gd = 'D:\Godot\Godot_v4.7.2-stable_win64_console.exe'
 & $gd --headless --path . --quit-after 1500 -- --smoke-contract
 # 5) Phase 2B 顾客环测试：两 NPC 复用同一座位、两轮订单流程
 & $gd --headless --path . --quit-after 12000 -- --smoke-loop
+# 6) Phase 2C 双营业日验收：顾客流/订单成败/经济/声望/结算/存档/次日
+& $gd --headless --path . --quit-after 9000 -- --smoke-days
 ```
+运行方式：Godot 4.7.2 打开 `project.godot` → F5。游戏流程：约 12 秒后开张，顾客自动进店下单；对准等待中的 NPC 按 **E** 交付酒水（吧台拾取或 Debug Panel 补货）。Debug 面板（右上）：生成顾客/添加物品/金币/快进/关门/重置/暂停/倍率。日末自动结算并存入 user://arcane_tavern_save_v1.json；带 `--autoload-save` 启动可接续存档。
 
 运行方式：Godot 4.7.2 打开 `project.godot` → F5。操作：WASD 移动、鼠标视角（左键捕获 / Esc 释放）、对准物品按 **E** 拾取、按 **Q** 丢下；顾客 NPC 会自行进店找座下单，对准等待中的 NPC 按 **E** 交付酒水（DebugHUD 左下角显示状态与最近结果）。

@@ -22,6 +22,9 @@ EventBus="*res://game/scripts/core/event_bus.gd"
 GameState="*res://game/scripts/core/game_state.gd"
 DataRegistry="*res://game/scripts/core/data_registry.gd"
 RuleValidator="*res://game/scripts/core/rule_validator.gd"
+GameClock="*res://game/scripts/time/game_clock.gd"
+DayManager="*res://game/scripts/tavern/day_manager.gd"
+SaveManager="*res://game/scripts/save/save_manager.gd"
 GameManager="*res://game/scripts/core/game_manager.gd"
 
 [display]

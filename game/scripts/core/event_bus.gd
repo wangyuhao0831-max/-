@@ -36,3 +36,26 @@ signal order_closed(order: Order)
 
 ## 一笔最小交易完成（NPC 付款入账酒馆）。
 signal transaction_completed(transaction: Transaction)
+
+# --- Phase 2C：日循环 / 订单失败 / 声望 / 存档 ---
+
+## 新 NPC 成功生成进店（DayManager 统计顾客）。
+signal npc_entered(npc_id: StringName)
+
+## 营业日阶段切换（DayManager：start_day/open_tavern/service/close_tavern/day_summary/next_day）。
+signal day_phase_changed(phase: StringName)
+
+## 新的一天开始（携带新 day 编号）。
+signal day_started(day: int)
+
+## 日结算完成（DayManager 生成快照）。
+signal day_summary_ready(summary: DaySummary)
+
+## 声望变化（携带 clamp 后的新值）。
+signal reputation_changed(value: int)
+
+## 订单失败（超时未交付，NPC 离场；声望 -）。
+signal order_failed(order: Order)
+
+## 存档请求（reason：day_summary 等；由场景根监听执行文件写入）。
+signal save_requested(reason: StringName)

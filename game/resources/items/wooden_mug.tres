@@ -9,3 +9,4 @@ display_name = "木杯"
 description = "灰盒占位物品：一只粗糙的木制酒杯。"
 stack_max = 99
 price = 5
+cost = 2

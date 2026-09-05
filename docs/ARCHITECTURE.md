@@ -83,14 +83,14 @@ Core     EventBus / GameState / DataRegistry /     │
 | `scripts/player` | 玩家控制与相机（灰盒验证用） | ✅ |
 | `scripts/interaction` | 可交互物抽象、检测、Prompt/Result 契约 | ✅（含 ItemDropper、NpcDelivery 交付组件） |
 | `scripts/inventory` | 物品定义、栈、库存容器（玩家+NPC 消费侧） | ✅ |
-| `scripts/ui` | 调试 UI：DebugHUD（只订阅 EventBus 并格式化显示，R8） | ✅ |
+| `scripts/ui` | 调试 UI：DebugHUD + DebugPanel（只订阅 EventBus / 按钮驱动，R8） | ✅ |
 | `scripts/npc` | Profile/RuntimeState/Controller/StateMachine | ✅（Phase 2B 顾客环；AI 决策点预留） |
-| `scripts/tavern` | 座位/订单/顾客生成（最小顾客环） | ✅（Phase 2B 最小交付） |
+| `scripts/tavern` | 座位/订单/顾客生成/DayManager/DaySummary（2B 顾客环 + 2C 营业日/结算） | ✅（2B/2C 最小交付） |
 | `scripts/economy` | Transaction 最小交易记录 | ✅（Phase 2B 最小交付） |
 | `scripts/ai` | AIClient 接口与数据模型 + MockAIClient | 未开始（AI Server 缺席不阻塞） |
-| `scripts/time` | 游戏时钟（NPC 节奏可 Mock） | 占位（Phase 1 不强制） |
+| `scripts/time` | GameClock：时间倍率/暂停/营业日秒（autoload） | ✅（Phase 2C） |
 | `scripts/quest` | 任务（当前 Sprint 无交付） | 占位 |
-| `scripts/save` | 存档（当前 Sprint 无交付） | 占位 |
+| `scripts/save` | SaveManager：最小 JSON 存档 I/O（autoload） | ✅（Phase 2C） |
 
 > 注：tavern/economy 在 Phase 2B 只交付顾客环所需**最小接口**（座位/订单/单笔交易），禁止提前扩展成完整经济系统（R11）。
 

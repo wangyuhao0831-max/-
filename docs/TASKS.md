@@ -10,6 +10,7 @@
 | Phase 1 | Vertical Slice Core Framework（Goal 1 完成） | ✅ Core Runtime 环 |
 | Phase 2A | Core Contract Layer（GameState / DataRegistry / RuleValidator / InteractionResult） | ✅ 完成 |
 | Phase 2B | Tavern Minimum Customer Loop（NPC 顾客环 / 座位 / 订单 / 最小交易） | ✅ 完成 |
+| Phase 2C | Vertical Slice Stabilization（时间/日循环/经济/声望/存档/调试） | ✅ 完成 |
 
 ## Phase 0：Repository Audit + Project Bootstrap
 
@@ -133,6 +134,41 @@
 - 座位分配顺序与直觉可能相反（场景节点名排序结果以运行日志为准）→ 验收断言用"同一座位引用相等"而非硬编码座位名
 - 交付侧断言要先算清库存账（拾 3 交 1 剩 2），曾写错期望值导致误报失败
 - 进程退出时 `_exit_tree` 防御性释放座位/注销会出现在日志尾部 —— 排查"卡死"时要区分运行期日志与退出期日志
+
+---
+
+## Phase 2C：Vertical Slice Stabilization（✅ 已完成 2026）
+
+> 目标：把 Tavern Minimum Loop 变成可连续试玩 5–10 分钟的最小游戏循环。
+> 范围纪律：不进入 AI Server / LLM / NPC Memory / 动态任务 / 复杂经营。
+
+### 交付清单
+
+- [x] **GameClock**（time/game_clock.gd，autoload）：暂停/恢复（SceneTree.paused）、时间倍率（Engine.time_scale 0.1–10）、营业日秒数累计、Debug 快进
+- [x] **DayManager**（tavern/day_manager.gd，autoload）：`StartDay → OpenTavern → Service → CloseTavern → DaySummary → NextDay` 全生命周期（时间窗口数据驱动、可调时长）
+- [x] **营业闸门**：`can_spawn_customer()` —— 仅 Service 且未到"关门前停止接待"窗口允许生成；顾客全部离场且无进行中订单 → 自动结算
+- [x] **Minimal Economy**：ItemDefinition `cost`（酒瓶 3 / 木杯 2）与 `price`；日级 revenue（实收）/ cost（售出成本记账口径）/ profit；金币=钱箱台账
+- [x] **Reputation**：0–100 起步 50；成功订单 +2 / 失败订单 −3（EventBus.reputation_changed）
+- [x] **订单失败路径**：Order `expires_at`（GameClock 口径 TTL 40s）→ 超时 mark_failed → 顾客离开（状态机补 wait_drink→leave）→ 失败计数/声望扣减
+- [x] **DaySummary**：Day/Customers/Completed/Failed/Revenue/Cost/Profit/ReputationChange/Gold 快照对象 + EventBus.day_summary_ready
+- [x] **Minimal Save**（save/save_manager.gd，autoload，user:// JSON）：game_version/current_day/gold/reputation/inventory/unlocks；日结算自动存档（save_requested），`--autoload-save` 启动载入
+- [x] **Debug Panel**（ui/debug_panel.gd）：开始营业/生成顾客/添加物品/添加金币/时间快进/提前关门/重置今天/暂停/倍率 + HUD 营业与 NPC/座位/订单状态视图
+
+### Phase 2C 验证协议记录（Godot 4.7.2 console，全部通过）
+
+1. `--headless --import`：无 parse error
+2. 主场景 headless 240+ 帧：无运行时错误
+3. `-- --smoke` / `--smoke-contract` / `--smoke-loop`：Phase 1 / 2A / 2B 全 PASS —— **无回归**
+4. `-- --smoke-days`（新增）：**37 断言全 PASS** —— 连续两个完整营业日：Day1 开张→顾客×2→交付→打烊→结算（顾客2/完成2/失败0/收入16/成本6/利润10/声望+4/金币16）→ 自动存档（current_day=1/gold/rep/版本/inventory/unlocks）→ 次日；Day2 故意不交付 → 订单超时失败 → 声望 −3 → 结算存档（day=2）→ Day3 开始
+5. **待手动验收**：F5 完整游玩（默认节奏 1x：约 5+7 秒后开张，营业 90 秒，接客间隔 5 秒；可用调试面板/倍率加速）
+
+### Phase 2C 已记录的实现教训
+
+- 状态机迁移表必须覆盖异常路径：新增 wait_drink→leave（超时放弃）时若漏加，NPC 会每帧尝试非法迁移并永久卡死（实测抓到）
+- 测试中的"到达状态" ≠ "流程完成"：LEAVE 状态在开始走出时即置位，必须再等节点真正离场（spawner 活跃引用清空）后再进行下一轮
+- 营业时间窗口与测试节奏强耦合：自动计时下第二轮生成可能恰好撞上关门线 → 测试显式放宽窗口/手动快进跨线
+- Engine.time_scale 是全游戏节拍唯一开关（Physics/Process delta 自动折算），计时系统不要另搞一套
+- PowerShell 批量改文件时 `` `n `` 会写成字面量（非换行）→ 后续用 edit 工具逐处处理
 
 ---
 

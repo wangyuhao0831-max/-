@@ -1,4 +1,4 @@
-[gd_scene load_steps=42 format=3]
+[gd_scene load_steps=44 format=3]
 
 [ext_resource type="Script" path="res://game/scripts/player/player_controller.gd" id="1_pl"]
 [ext_resource type="Script" path="res://game/scripts/player/camera_controller.gd" id="2_cam"]
@@ -13,6 +13,8 @@
 [ext_resource type="Script" path="res://game/scripts/tavern/seat_manager.gd" id="11_sm"]
 [ext_resource type="Script" path="res://game/scripts/tavern/order_manager.gd" id="12_om"]
 [ext_resource type="Script" path="res://game/scripts/tavern/customer_spawner.gd" id="13_sp"]
+[ext_resource type="Script" path="res://game/scripts/tavern/dev_playground_root.gd" id="14_root"]
+[ext_resource type="Script" path="res://game/scripts/ui/debug_panel.gd" id="15_panel"]
 
 [sub_resource type="StandardMaterial3D" id="MatFloor"]
 albedo_color = Color(0.42, 0.42, 0.46, 1)
@@ -117,6 +119,7 @@ tonemap_mode = 2
 ambient_light_source = 3
 
 [node name="DevPlayground" type="Node3D"]
+script = ExtResource("14_root")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("EnvRes")
@@ -322,3 +325,7 @@ offset_top = 12.0
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
 theme_override_constants/outline_size = 4
 theme_override_font_sizes/font_size = 14
+
+[node name="DebugPanel" type="CanvasLayer" parent="."]
+layer = 2
+script = ExtResource("15_panel")

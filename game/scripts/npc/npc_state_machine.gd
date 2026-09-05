@@ -21,7 +21,7 @@ const _TRANSITIONS := {
 	S_WALK_TO_SEAT: [S_SIT],
 	S_SIT: [S_ORDER],
 	S_ORDER: [S_WAIT_DRINK],
-	S_WAIT_DRINK: [S_PAY],
+	S_WAIT_DRINK: [S_PAY, S_LEAVE],  # Phase 2C：交付超时失败后顾客放弃离开
 	S_PAY: [S_DRINK],
 	S_DRINK: [S_LEAVE],
 	S_LEAVE: [],

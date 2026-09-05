@@ -161,6 +161,12 @@ func debit(actor_id: StringName, amount: int) -> bool:
 	return true
 
 
+## 直接设定余额（存档载入 / 调试面板；负数钳为 0，缺失自动建账）。
+func set_balance(actor_id: StringName, amount: int) -> void:
+	_wallets[actor_id] = maxi(amount, 0)
+	print_debug("[GameState] set wallet: %s = %d" % [actor_id, _wallets[actor_id]])
+
+
 ## 当前注册规模（调试信息）。
 func debug_summary() -> String:
 	return "inventories=%d actors=%d" % [_inventories.size(), _actor_inventory.size()]
