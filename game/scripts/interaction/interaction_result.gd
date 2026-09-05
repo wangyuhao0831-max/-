@@ -23,6 +23,19 @@ const CODE_NOT_READY := &"not_ready"
 ## 校验通过后的实际执行与预期不一致（防御性错误）。
 const CODE_STATE_MISMATCH := &"state_mismatch"
 const CODE_NOT_IMPLEMENTED := &"not_implemented"
+# --- Phase 2B：NPC / 订单 / 座位 / 经济 ---
+## 金币不足（订单/付款前置）。
+const CODE_INSUFFICIENT_FUNDS := &"insufficient_funds"
+## NPC 已存在进行中的订单。
+const CODE_ORDER_ACTIVE := &"order_active"
+const CODE_ORDER_NOT_FOUND := &"order_not_found"
+## 订单不在可操作阶段（未到交付/已处理）。
+const CODE_ORDER_NOT_OPEN := &"order_not_open"
+## 座位已被占用。
+const CODE_SEAT_TAKEN := &"seat_taken"
+## 无空闲座位。
+const CODE_NO_SEAT := &"no_seat"
+const CODE_SEAT_NOT_RESERVED := &"seat_not_reserved"
 
 ## 是否成功。
 var success := false

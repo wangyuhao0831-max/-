@@ -81,18 +81,18 @@ Core     EventBus / GameState / DataRegistry /     │
 |---|---|---|
 | `scripts/core` | EventBus / GameState / DataRegistry / GameManager / RuleValidator | ✅（Phase 2A 全部交付） |
 | `scripts/player` | 玩家控制与相机（灰盒验证用） | ✅ |
-| `scripts/interaction` | 可交互物抽象、检测、Prompt/Result 契约 | ✅（含 ItemDropper） |
+| `scripts/interaction` | 可交互物抽象、检测、Prompt/Result 契约 | ✅（含 ItemDropper、NpcDelivery 交付组件） |
 | `scripts/inventory` | 物品定义、栈、库存容器（玩家+NPC 消费侧） | ✅ |
 | `scripts/ui` | 调试 UI：DebugHUD（只订阅 EventBus 并格式化显示，R8） | ✅ |
-| `scripts/npc` | NPCProfile（纯数据 ✅ Phase 2A）；RuntimeState/Controller/StateMachine | 运行态未开始（2B） |
+| `scripts/npc` | Profile/RuntimeState/Controller/StateMachine | ✅（Phase 2B 顾客环；AI 决策点预留） |
+| `scripts/tavern` | 座位/订单/顾客生成（最小顾客环） | ✅（Phase 2B 最小交付） |
+| `scripts/economy` | Transaction 最小交易记录 | ✅（Phase 2B 最小交付） |
 | `scripts/ai` | AIClient 接口与数据模型 + MockAIClient | 未开始（AI Server 缺席不阻塞） |
-| `scripts/tavern` | 酒馆布局、座位表、门/入口（Phase 1 提供 NPC 流程所需最小子集：座位查找） | Phase 1 最小子集 |
-| `scripts/economy` | 定价/支付结算（NPC Pay 流程所需最小接口） | Phase 1 最小子集 |
 | `scripts/time` | 游戏时钟（NPC 节奏可 Mock） | 占位（Phase 1 不强制） |
 | `scripts/quest` | 任务（当前 Sprint 无交付） | 占位 |
 | `scripts/save` | 存档（当前 Sprint 无交付） | 占位 |
 
-> 注：tavern/economy 只实现 NPC 状态机验收所需的**最小接口**，禁止提前扩展成完整系统（R11 不做超出 Sprint 的工作）。
+> 注：tavern/economy 在 Phase 2B 只交付顾客环所需**最小接口**（座位/订单/单笔交易），禁止提前扩展成完整经济系统（R11）。
 
 ## 7. 潜在架构风险登记（多人协作注意）
 

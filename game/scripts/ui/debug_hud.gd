@@ -3,8 +3,9 @@ extends CanvasLayer
 ## UI（调试）：DevPlayground 调试浮层。
 ## 规则 R8：只订阅 EventBus 信号并格式化显示，不含任何业务决策。
 ## 附带自动化测试入口（测试逻辑与产品代码隔离，runner 需被引用持有）：
-##   --smoke            → game/tests/dev_playground_smoke.gd（Phase 1 回归）
-##   --smoke-contract   → game/tests/phase2a_contract_smoke.gd（Phase 2A 契约）
+##   --smoke          → game/tests/dev_playground_smoke.gd（Phase 1 回归）
+##   --smoke-contract → game/tests/phase2a_contract_smoke.gd（Phase 2A 契约）
+##   --smoke-loop     → game/tests/phase2b_loop_smoke.gd（Phase 2B 顾客环）
 
 @export_group("Dependencies")
 @export var player_path: NodePath = ^"../Player"
@@ -13,8 +14,10 @@ extends CanvasLayer
 const REFRESH_INTERVAL := 0.15
 const SMOKE_ARG := "--smoke"
 const CONTRACT_ARG := "--smoke-contract"
+const LOOP_ARG := "--smoke-loop"
 const SMOKE_SCRIPT := "res://game/tests/dev_playground_smoke.gd"
 const CONTRACT_SCRIPT := "res://game/tests/phase2a_contract_smoke.gd"
+const LOOP_SCRIPT := "res://game/tests/phase2b_loop_smoke.gd"
 
 var _player: PlayerController = null
 var _label: Label = null
@@ -38,6 +41,8 @@ func _ready() -> void:
 		call_deferred("_launch_smoke", SMOKE_SCRIPT)
 	elif args.has(CONTRACT_ARG):
 		call_deferred("_launch_smoke", CONTRACT_SCRIPT)
+	elif args.has(LOOP_ARG):
+		call_deferred("_launch_smoke", LOOP_SCRIPT)
 
 
 func _process(delta: float) -> void:

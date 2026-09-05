@@ -17,6 +17,8 @@ var _inventories: Dictionary[StringName, Inventory] = {}
 var _actor_inventory: Dictionary[StringName, StringName] = {}
 # inventory_id -> 最近登记的 actor_id（反查表，便于"拿到 Inventory 推导 actor"）。
 var _inventory_actor: Dictionary[StringName, StringName] = {}
+# actor_id -> 金币余额（Phase 2B 最小经济台账；actor 退出树时清理）。
+var _wallets: Dictionary[StringName, int] = {}
 
 
 ## 由 GameManager 在启动引导完成时调用：boot → playing。
@@ -103,6 +105,60 @@ func get_inventory_for_actor(actor_id: StringName) -> Inventory:
 ## 反查：持有某库存的 actor id（最近登记）；无返回 &""。
 func get_actor_id_for_inventory(inventory_id: StringName) -> StringName:
 	return _inventory_actor.get(inventory_id, &"")
+
+
+# --- 金币台账（Phase 2B 最小经济；规则/验证见 RuleValidator 与订单流注释） ---
+
+## 注册钱包（重复 actor_id 忽略并告警，保持首值）。成功返回 true。
+func register_wallet(actor_id: StringName, initial: int) -> bool:
+	if actor_id == &"" or initial < 0:
+		push_warning("GameState: 非法钱包注册（actor=%s initial=%d）" % [actor_id, initial])
+		return false
+	if _wallets.has(actor_id):
+		push_warning("GameState: 重复注册钱包 %s（保留首值 %d）" % [actor_id, _wallets[actor_id]])
+		return false
+	_wallets[actor_id] = initial
+	print_debug("[GameState] register wallet: %s = %d" % [actor_id, initial])
+	return true
+
+
+## 确保钱包存在（无则建 0，不告警）；返回当前余额。
+func ensure_wallet(actor_id: StringName) -> int:
+	if not _wallets.has(actor_id):
+		_wallets[actor_id] = 0
+		print_debug("[GameState] ensure wallet: %s = 0" % actor_id)
+	return _wallets[actor_id]
+
+
+## 移除钱包（actor 退出树时清理）。
+func remove_wallet(actor_id: StringName) -> void:
+	if _wallets.erase(actor_id):
+		print_debug("[GameState] remove wallet: %s" % actor_id)
+
+
+## 查询余额（未注册视为 0）。
+func get_balance(actor_id: StringName) -> int:
+	return _wallets.get(actor_id, 0)
+
+
+## 入账；余额增加 amount。actor 未注册时告警并返回 false。
+func credit(actor_id: StringName, amount: int) -> bool:
+	if amount < 0 or not _wallets.has(actor_id):
+		push_warning("GameState: credit 失败（actor=%s amount=%d）" % [actor_id, amount])
+		return false
+	_wallets[actor_id] = _wallets[actor_id] + amount
+	return true
+
+
+## 出账；余额不足或未注册返回 false（不产生负余额）。
+func debit(actor_id: StringName, amount: int) -> bool:
+	if amount < 0:
+		push_warning("GameState: debit 非法金额 %d" % amount)
+		return false
+	if not _wallets.has(actor_id) or _wallets[actor_id] < amount:
+		return false
+	_wallets[actor_id] = _wallets[actor_id] - amount
+	return true
 
 
 ## 当前注册规模（调试信息）。

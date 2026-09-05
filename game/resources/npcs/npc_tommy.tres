@@ -10,3 +10,5 @@ description = "灰盒测试 NPC：常住酒馆的矮人，偏好麦酒。Phase 2
 preferred_item_ids = Array[StringName]([&"item_bottle_ale"])
 personality_tags = Array[StringName]([&"dwarf", &"gruff", &"generous"])
 relationship_start = 5
+wallet_coins = 40
+body_tint = Color(0.85, 0.62, 0.38, 1)

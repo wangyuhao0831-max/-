@@ -15,6 +15,10 @@ extends Resource
 ## 单格堆叠上限。
 @export_range(1, 999, 1) var stack_max: int = 99
 
+@export_group("Economy")
+## 单价（金币；订单结算使用，酒馆数据）。
+@export_range(0, 9999, 1) var price: int = 0
+
 
 ## 是否是同一物品（按 item_id 比较）。
 func matches_id(p_item_id: StringName) -> bool:

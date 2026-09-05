@@ -63,6 +63,24 @@ func _raycast_target() -> Interactable:
 	if result.is_empty():
 		return null
 	var collider := result.get(&"collider") as Node3D
+	return _resolve_interactable(collider)
+
+
+## 组件解析约定（Phase 2B）：命中物自身 → 命中物固定子节点 "Interactable"
+## → 向上最多 3 层祖先中的 Interactable。
+func _resolve_interactable(collider: Node3D) -> Interactable:
+	if collider == null:
+		return null
 	if collider is Interactable:
 		return collider as Interactable
+	var component := collider.get_node_or_null("Interactable")
+	if component is Interactable:
+		return component as Interactable
+	var node := collider.get_parent() as Node3D
+	for _depth in 3:
+		if node == null:
+			break
+		if node is Interactable:
+			return node as Interactable
+		node = node.get_parent() as Node3D
 	return null

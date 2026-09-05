@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=3]
+[gd_scene load_steps=42 format=3]
 
 [ext_resource type="Script" path="res://game/scripts/player/player_controller.gd" id="1_pl"]
 [ext_resource type="Script" path="res://game/scripts/player/camera_controller.gd" id="2_cam"]
@@ -9,6 +9,10 @@
 [ext_resource type="Resource" path="res://game/resources/items/bottle_ale.tres" id="7_item"]
 [ext_resource type="Script" path="res://game/scripts/interaction/item_dropper.gd" id="8_drop"]
 [ext_resource type="Resource" path="res://game/resources/items/wooden_mug.tres" id="9_mug"]
+[ext_resource type="Script" path="res://game/scripts/tavern/tavern_seat.gd" id="10_seat"]
+[ext_resource type="Script" path="res://game/scripts/tavern/seat_manager.gd" id="11_sm"]
+[ext_resource type="Script" path="res://game/scripts/tavern/order_manager.gd" id="12_om"]
+[ext_resource type="Script" path="res://game/scripts/tavern/customer_spawner.gd" id="13_sp"]
 
 [sub_resource type="StandardMaterial3D" id="MatFloor"]
 albedo_color = Color(0.42, 0.42, 0.46, 1)
@@ -86,6 +90,18 @@ radius = 0.08
 height = 0.5
 
 [sub_resource type="CapsuleShape3D" id="ShapeBody"]
+
+[sub_resource type="BoxMesh" id="MeshCounter"]
+size = Vector3(1.4, 0.95, 0.5)
+
+[sub_resource type="BoxMesh" id="MeshChair"]
+size = Vector3(0.5, 0.55, 0.5)
+
+[sub_resource type="BoxMesh" id="MeshDoorSmall"]
+size = Vector3(1.2, 0.06, 0.06)
+
+[sub_resource type="BoxShape3D" id="ShapeCounter"]
+size = Vector3(1.4, 0.95, 0.5)
 radius = 0.35
 height = 1.8
 
@@ -140,7 +156,7 @@ material_override = SubResource("MatCrate")
 shape = SubResource("ShapeCrate")
 
 [node name="CrateB" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.0, 0.25, -1.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.0, 0.25, -4.0)
 
 [node name="Mesh" type="MeshInstance3D" parent="CrateB"]
 mesh = SubResource("MeshCrate")
@@ -245,6 +261,57 @@ script = ExtResource("3_mgr")
 
 [node name="ItemDropper" type="Node3D" parent="Player"]
 script = ExtResource("8_drop")
+
+[node name="TavernZone" type="Node3D" parent="."]
+
+[node name="ZoneCounter" type="StaticBody3D" parent="TavernZone"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3, 0.475, -2.3)
+
+[node name="Mesh" type="MeshInstance3D" parent="TavernZone/ZoneCounter"]
+mesh = SubResource("MeshCounter")
+material_override = SubResource("MatTable")
+
+[node name="Collision" type="CollisionShape3D" parent="TavernZone/ZoneCounter"]
+shape = SubResource("ShapeCounter")
+
+[node name="Door" type="Node3D" parent="TavernZone"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.9, 0, -3.6)
+
+[node name="Sign" type="MeshInstance3D" parent="TavernZone/Door"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, 0)
+mesh = SubResource("MeshDoorSmall")
+material_override = SubResource("MatCrate")
+
+[node name="Seats" type="Node3D" parent="TavernZone"]
+
+[node name="SeatA" type="Node3D" parent="TavernZone/Seats"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0, -1.5)
+script = ExtResource("10_seat")
+seat_id = &"seat_a"
+
+[node name="Chair" type="MeshInstance3D" parent="TavernZone/Seats/SeatA"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.275, 0)
+mesh = SubResource("MeshChair")
+material_override = SubResource("MatCrate")
+
+[node name="SeatB" type="Node3D" parent="TavernZone/Seats"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.45, 0, -1.5)
+script = ExtResource("10_seat")
+seat_id = &"seat_b"
+
+[node name="Chair" type="MeshInstance3D" parent="TavernZone/Seats/SeatB"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.275, 0)
+mesh = SubResource("MeshChair")
+material_override = SubResource("MatWoodDark")
+
+[node name="SeatManager" type="Node" parent="TavernZone"]
+script = ExtResource("11_sm")
+
+[node name="OrderManager" type="Node" parent="TavernZone"]
+script = ExtResource("12_om")
+
+[node name="CustomerSpawner" type="Node" parent="TavernZone"]
+script = ExtResource("13_sp")
 
 [node name="UI" type="CanvasLayer" parent="."]
 script = ExtResource("6_hud")

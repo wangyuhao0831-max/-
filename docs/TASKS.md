@@ -7,8 +7,9 @@
 | 阶段 | 名称 | 状态 |
 |---|---|---|
 | Phase 0 | Repository Audit + Project Bootstrap | ✅ 完成 |
-| Phase 1 | Vertical Slice Core Framework（Goal 1 完成，NPC 流未开始） | 🔄 进行中 |
+| Phase 1 | Vertical Slice Core Framework（Goal 1 完成） | ✅ Core Runtime 环 |
 | Phase 2A | Core Contract Layer（GameState / DataRegistry / RuleValidator / InteractionResult） | ✅ 完成 |
+| Phase 2B | Tavern Minimum Customer Loop（NPC 顾客环 / 座位 / 订单 / 最小交易） | ✅ 完成 |
 
 ## Phase 0：Repository Audit + Project Bootstrap
 
@@ -100,6 +101,41 @@
 
 ---
 
+## Phase 2B：Tavern Minimum Customer Loop（✅ 已完成 2026）
+
+> 目标（唯一）：NPC 进店 → 找座 → 坐下 → 下单 → 玩家交付 → 付款 → 饮用 → 离开 → 座位释放。
+> 范围纪律：Mock 数据、无 AI（仅保留决策点接口位）、不实现最终美术/复杂 UI。
+> 验收：**两个 NPC 依次复用同一座位，完成两轮完整订单流程**（自动测试 28 断言）。
+
+### 交付清单
+
+- [x] **NPC 运行时**：`NPCRuntimeState`（实例快照/关联；存档候选）、`NPCStateMachine`（enter_tavern→find_seat→walk_to_seat→sit→order→wait_drink→pay→drink→leave 合法迁移表）
+- [x] **NPCController**（Game Brain）：状态驱动 + 走动/入座/下单/收款/饮用/离场；**AI 决策预留位** = `_pick_drink_item()` 等决策点（当前确定性 Godot 规则）
+- [x] **Tavern**：`TavernSeat`（占用状态/入座点/组注册）、`SeatManager`（收集/空闲查询/释放）、`Order`（OPEN→FULFILLED→CLOSED）、`OrderManager`（下单：RuleValidator.npc_request 闸门 + 钱包门槛；交付/收款标记）、`CustomerSpawner`（档案队列轮转/门外出生/auto 循环）
+- [x] **Economy 最小**：`Transaction`（事实记录 + 酒馆钱箱 id）+ GameState 金币台账（register/credit/debit/balance）；物品 `price`、NPC 档案 `wallet_coins/body_tint` 数据驱动
+- [x] **交付链**：`NpcDelivery`（NPC 子组件，InteractionManager 组件解析约定扩展：命中物 → 子节点 "Interactable" → 祖先）+ NPCController.deliver_from（validate_deliver → 扣/收 → 订单 FULFILLED → InteractionResult 广播）
+- [x] NPC actor/inventory 注册 GameState（npc_inv_<id>），离店注销（含钱包清理）
+- [x] 事件：npc_state_changed / npc_left / order_created / order_fulfilled / order_closed / transaction_completed
+- [x] 场景：DevPlayground 新增 TavernZone（吧台/双座/门/管理器/生成器，auto_spawn 演示）+ `npc_customer.tscn` 模板（灰盒胶囊 + 交付组件 + Inventory）
+
+### Phase 2B 验证协议记录（Godot 4.7.2 console，全部通过）
+
+1. `--headless --import`：无 parse error
+2. 主场景 headless 240+ 帧：无运行时错误（含 NPC 模板/酒馆区加载）
+3. `-- --smoke`（Phase 1 回归）：拾取/放下往返/移动方向 全 PASS
+4. `-- --smoke-contract`（Phase 2A 回归）：51 断言 全 PASS
+5. `-- --smoke-loop`（新增）：**28 断言全 PASS** —— tommy→grimble 两轮：进店/找座/占座/下单/交付（玩家 3→2→1 瓶）/付款 8+8=16/交易×2/饮用/离场/座位释放→复用/actor+库存注销/订单×2 关闭
+6. **待手动验收**：F5 观察自动顾客流 + E 对准等待中的 NPC 交付（提示 "交付 空酒瓶"）
+
+### Phase 2B 已记录的实现教训
+
+- **状态轮询别用"仅 OPEN"查询**：交付后订单阶段变 FULFILLED，用 `get_open_order()` 轮询会永远卡在 wait_drink —— 必须按 order_id 查全阶段
+- 座位分配顺序与直觉可能相反（场景节点名排序结果以运行日志为准）→ 验收断言用"同一座位引用相等"而非硬编码座位名
+- 交付侧断言要先算清库存账（拾 3 交 1 剩 2），曾写错期望值导致误报失败
+- 进程退出时 `_exit_tree` 防御性释放座位/注销会出现在日志尾部 —— 排查"卡死"时要区分运行期日志与退出期日志
+
+---
+
 ### Phase 1 后续（未开始，规划清单）
 
 **范围**：以下模块 + NPC 完整状态流，配合灰盒酒馆场景（可复用桌面素材）。验收 = 用户侧一条完整流程：
@@ -141,20 +177,22 @@
 
 ### NPC（game/scripts/npc）
 
-- [x] `NPCProfile`（纯数据 Resource，Phase 2A 交付 + 示例 .tres）
-- [ ] `NPCRuntimeState`（运行态，可序列化候选）
-- [ ] `NPCController`（Game Brain：驱动状态机 + 校验应用 AI 建议）
-- [ ] `NPCStateMachine` + 状态：`Idle → EnterTavern → FindSeat → WalkToSeat → Sit → Order → WaitDrink → Drink → Talk → Pay → Leave`
+- [x] `NPCProfile`（纯数据 Resource，Phase 2A 交付 + 钱包/体型扩展 2B）
+- [x] `NPCRuntimeState`（运行态快照/关联，Phase 2B 交付）
+- [x] `NPCController`（Game Brain：状态机驱动 + RuleValidator 闸门，Phase 2B 交付）
+- [x] `NPCStateMachine` + 状态：`EnterTavern → FindSeat → WalkToSeat → Sit → Order → WaitDrink → Drink → Pay → Leave`（Phase 2B 交付；实现顺序 Drink/Pay 按交付后付款语义：WaitDrink→Pay→Drink→Leave）
+- [ ] NPC AI Brain 建议注入（决策点已预留：_pick_drink_item 等；后续 Goal）
 
-### Tavern / Economy（最小子集，仅支撑 NPC 验收流）
+### Tavern / Economy（Phase 2B 最小交付 ✅）
 
-- [ ] 座位表/入口（FindSeat 数据源）—— 只做验收所需最小实现
-- [ ] 价格与支付结算最小接口（Pay 用）—— 只做验收所需最小实现
+- [x] 座位表/入口（TavernSeat/SeatManager/门）—— 验收所需最小实现
+- [x] Order/OrderManager/CustomerSpawner + 最小 Transaction + GameState 金币台账 —— 验收所需最小实现
 
 ### Phase 1 收尾
 
 - [x] Goal 1 灰盒场景串通（DevPlayground：Primitive Mesh + 灰盒材质）✅
-- [ ] NPC 全流程灰盒串通（后续 Goal）
+- [x] NPC 全流程灰盒串通（Phase 2B：两 NPC 两轮顾客环自动验证）✅
+- [ ] 玩家→NPC 交付的手动 UI 手感验收（自动测试覆盖逻辑链；E 对准 NPC 提示/交付需 F5 确认）
 - [ ] 验证协议全项通过（parser / broken resource / scene load / 核心流程冒烟）
 - [ ] 本文件更新为 Phase 1 ✅
 

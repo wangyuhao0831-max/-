@@ -22,6 +22,14 @@ extends Resource
 ## 初始关系值（保留：relationship_delta 落点，Phase 2 不实现）。
 @export var relationship_start: int = 0
 
+@export_group("Economy")
+## 初始钱包（金币；付款由 GameState 台账执行）。
+@export var wallet_coins: int = 20
+
+@export_group("Presentation")
+## 灰盒体型配色（运行时生成材质，非最终美术）。
+@export var body_tint: Color = Color(0.75, 0.78, 0.85, 1)
+
 
 ## 是否偏好该物品（preferred_item_ids 为空视为不限）。
 func prefers(item_id: StringName) -> bool:

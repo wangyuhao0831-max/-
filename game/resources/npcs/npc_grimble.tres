@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="NPCProfile" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://game/scripts/npc/npc_profile.gd" id="1_profile"]
+
+[resource]
+script = ExtResource("1_profile")
+npc_id = &"npc_grimble"
+display_name = "格林布尔（半精灵酒客）"
+description = "灰盒测试 NPC：安静的半精灵，同样偏好麦酒。Phase 2B 用于座位复用验收。"
+preferred_item_ids = Array[StringName]([&"item_bottle_ale"])
+personality_tags = Array[StringName]([&"half_elf", &"calm", &"polite"])
+relationship_start = 3
+wallet_coins = 45
+body_tint = Color(0.45, 0.68, 0.5, 1)

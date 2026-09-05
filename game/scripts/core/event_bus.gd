@@ -16,3 +16,23 @@ signal inventory_changed(inventory: Inventory)
 
 ## 一次交互结束（成功或失败皆广播；由执行方发出，UI/日志订阅做反馈）。
 signal interaction_result(result: InteractionResult)
+
+# --- Phase 2B：NPC / 订单 / 交易 ---
+
+## NPC 状态切换（previous/current 为 NPCStateMachine 状态 StringName）。
+signal npc_state_changed(npc_id: StringName, previous_state: StringName, current_state: StringName)
+
+## NPC 完成消费离开酒馆（随后节点被释放）。
+signal npc_left(npc_id: StringName)
+
+## 新订单创建（NPC 落座后请求）。
+signal order_created(order: Order)
+
+## 订单交付完成（等待付款/饮用）。
+signal order_fulfilled(order: Order)
+
+## 订单收款并关闭。
+signal order_closed(order: Order)
+
+## 一笔最小交易完成（NPC 付款入账酒馆）。
+signal transaction_completed(transaction: Transaction)
