@@ -69,8 +69,35 @@ func run(driver: Node) -> void:
 		_fail(tree, "EventBus.inventory_changed 广播次数不足（got=%d, expect>=%d）" % [_received, EXPECTED_PICKUPS])
 		return
 
+	# --- 移动方向回归（曾出 bug：W/S 反转）---
+	# 前提：出生朝向 = -Z（相机 yaw=0，未注入鼠标输入）。
+	# W(前进) 应使 z 减小；S(后退) 应使 z 增大。
+	# 注意：线性加速度 12 m/s² 下速度反转需 ~0.4s，按键窗口必须显著长于
+	# 反转时间（45 物理帧 = 0.75s），否则惯性位移会掩盖真实方向。
+	var spawn_z := player.global_position.z
+
+	Input.action_press(&"move_forward")
+	for i in 45:
+		await tree.physics_frame
+	Input.action_release(&"move_forward")
+	var fwd_z := player.global_position.z
+	if fwd_z > spawn_z - 0.5:
+		_fail(tree, "W 方向错误：应前进(-Z) z=%.2f→%.2f 未前移" % [spawn_z, fwd_z])
+		return
+
+	var back_start := player.global_position.z
+	Input.action_press(&"move_back")
+	for i in 45:
+		await tree.physics_frame
+	Input.action_release(&"move_back")
+	var back_z := player.global_position.z
+	if back_z < back_start + 0.5:
+		_fail(tree, "S 方向错误：应后退(+Z) z=%.2f→%.2f 未后移" % [back_start, back_z])
+		return
+
 	print("[SMOKE] PASS: 场景加载 OK; 拾取 x%d; 库存合并 1 堆叠; EventBus 广播 %d 次" % [picked, _received])
-	print("[SMOKE] PASS: goal1 玩家出生/移动/视角为手动验收项（headless 无法模拟输入）")
+	print("[SMOKE] PASS: 移动方向 OK（W=-Z 前进 / S=+Z 后退，z: %.2f→%.2f→%.2f）" % [spawn_z, fwd_z, back_z])
+	print("[SMOKE] PASS: 鼠标视角手感为手动验收项（headless 无法主观评估）")
 	await tree.process_frame
 	await tree.process_frame
 	tree.quit(0)

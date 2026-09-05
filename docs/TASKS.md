@@ -60,6 +60,9 @@
 - `get_node_or_null()` 参数为 NodePath：传字符串字面量可隐式转换，传 `&"..."`（StringName）报 Parse Error
 - RefCounted 协程 await 挂起期间必须持有引用（否则静默中断）
 - GDScript lambda 按值捕获局部变量 → 跨回调计数用成员变量
+- **Godot 前向 = -Z**：前进输入(+y)必须映射 `-basis.z`；曾出现 W/S 反转 bug（手动验收发现）
+- 输入模拟断言注意惯性：线性加速度下速度反转需时间，按键窗口须长于反转时间
+- 手动验收有效：W/S 反转正是靠实机试玩发现，headless 输入模拟于修复后补为回归断言
 
 ---
 

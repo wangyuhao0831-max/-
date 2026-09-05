@@ -33,14 +33,16 @@ func get_inventory() -> Inventory:
 
 
 func _physics_process(delta: float) -> void:
+	# input_vec: x = 右(D)+/左(A)-，y = 前(W)+/后(S)-。
 	var input_vec := Input.get_vector(
 		&"move_left", &"move_right", &"move_back", &"move_forward"
 	)
-	# input_vec.y 为正 = 向前；基于相机（含偏航/俯仰）的世界朝向。
+	# 注意：Godot 节点"前方"为 -Z（basis.z 指向身后）。
+	# 因此前进输入(+y)必须映射到 -basis.z，否则 W/S 会反转（曾出现该 bug）。
 	var basis: Basis = global_transform.basis
 	if _rig != null:
 		basis = _rig.global_transform.basis
-	var wish_dir := basis * Vector3(input_vec.x, 0.0, input_vec.y)
+	var wish_dir := basis * Vector3(input_vec.x, 0.0, -input_vec.y)
 	wish_dir.y = 0.0
 
 	var target_h := Vector3.ZERO

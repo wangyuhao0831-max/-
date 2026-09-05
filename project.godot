@@ -12,24 +12,19 @@ config_version=5
 
 config/name="Project Arcane Tavern"
 config/description="Vertical Slice foundation for a 3D, AI-driven tavern management & social simulation game (Godot 4.x). Godot is the single source of truth; AI output is advisory only and always passes through Godot-side rule validation."
+run/main_scene="res://game/scenes/dev/dev_playground.tscn"
 config/features=PackedStringArray("4.7")
 config/icon="res://icon.svg"
-run/main_scene="res://game/scenes/dev/dev_playground.tscn"
-
-[display]
-
-window/size/viewport_width=1280
-window/size/viewport_height=720
-
-[rendering]
-
-renderer/rendering_method="forward_plus"
-renderer/rendering_method.mobile="gl_compatibility"
 
 [autoload]
 
 EventBus="*res://game/scripts/core/event_bus.gd"
 GameManager="*res://game/scripts/core/game_manager.gd"
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
 
 [input]
 
@@ -58,3 +53,7 @@ interact={
 "events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":69,"physical_keycode":69,"key_label":0,"unicode":101,"location":0,"echo":false,"script":null)
 ]
 }
+
+[rendering]
+
+renderer/rendering_method.mobile="gl_compatibility"
