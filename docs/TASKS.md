@@ -6,7 +6,7 @@
 
 | 阶段 | 名称 | 状态 |
 |---|---|---|
-| Phase 0 | Repository Audit + Project Bootstrap | ✅ 完成（见下，推送验证中） |
+| Phase 0 | Repository Audit + Project Bootstrap | ✅ 完成 |
 | Phase 1 | Vertical Slice Core Framework（Core/Player/Interaction/Inventory/AI/NPC） | ⬜ 未开始 |
 
 ## Phase 0：Repository Audit + Project Bootstrap
@@ -18,7 +18,7 @@
 - [x] docs 基线：README / ARCHITECTURE / CODING_STANDARDS / TASKS
 - [x] Godot headless 校验通过（--import 无错误）
 - [x] git init（main）+ 首次 commit
-- [ ] 推送 GitHub（wangyuhao0831-max/-）并 API 验证
+- [x] 推送 GitHub（wangyuhao0831-max/-）并 API 验证
 
 ### Phase 0 验证协议记录
 
