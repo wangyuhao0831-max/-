@@ -160,6 +160,8 @@ height = 0.07
 top_radius = 0.06
 bottom_radius = 0.09
 height = 0.7
+[sub_resource type="BoxMesh" id="MeshSign"]
+size = Vector3(1.0, 0.7, 0.06)
 [sub_resource type="BoxMesh" id="MeshCounterTop"]
 size = Vector3(1.1, 0.08, 5.0)
 
@@ -458,17 +460,48 @@ rotation_degrees = Vector3(-90, 0, 0)
 scale = Vector3(1.1, 1.1, 1.1)
 mesh = ExtResource("m_bar")
 material_override = SubResource("MatBarrel")
-[node name="Banner" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 2.6, -4.7)
-scale = Vector3(1.2, 1.2, 1.2)
+[node name="Banner1" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 2.2, -4.4)
+rotation_degrees = Vector3(-90, 0, 0)
+scale = Vector3(1.6, 1.6, 1.6)
 mesh = ExtResource("m_ban")
 material_override = SubResource("MatBanner")
 
-[node name="Banner" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2.6, -4.7)
-scale = Vector3(1.2, 1.2, 1.2)
+[node name="Banner2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2.2, -4.4)
+rotation_degrees = Vector3(-90, 0, 0)
+scale = Vector3(1.6, 1.6, 1.6)
 mesh = ExtResource("m_ban")
 material_override = SubResource("MatBanner")
+
+[node name="Sign" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.8, 2.7, 0)
+mesh = SubResource("MeshSign")
+material_override = SubResource("MatCounter")
+
+[node name="ShelfBottle1" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.15, 1.45, -1.5)
+scale = Vector3(0.6, 0.6, 0.6)
+mesh = SubResource("MeshBottle")
+material_override = SubResource("MatAmber")
+
+[node name="ShelfBottle2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.15, 1.45, -0.5)
+scale = Vector3(0.6, 0.6, 0.6)
+mesh = SubResource("MeshBottle")
+material_override = SubResource("MatAmber")
+
+[node name="ShelfBottle3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.15, 1.45, 0.5)
+scale = Vector3(0.6, 0.6, 0.6)
+mesh = SubResource("MeshBottle")
+material_override = SubResource("MatAmber")
+
+[node name="ShelfBottle4" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.15, 1.45, 1.5)
+scale = Vector3(0.6, 0.6, 0.6)
+mesh = SubResource("MeshBottle")
+material_override = SubResource("MatAmber")
 [node name="LampPole0" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.1, 0)
 mesh = SubResource("MeshLampPole")
