@@ -364,34 +364,22 @@ mesh = ExtResource("m_sta")
 material_override = SubResource("MatStairs")
 
 [node name="BarStool1" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.7, 0.35, -0.9)
-mesh = SubResource("MeshRoundStoolPedestal")
-material_override = SubResource("MatCounter")
-
-[node name="BarStool1Seat" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.7, 0.735, -0.9)
-mesh = SubResource("MeshRoundStoolSeat")
-material_override = SubResource("MatCounter")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6, 0, -0.9)
+scale = Vector3(3.0, 3.0, 3.0)
+mesh = ExtResource("m_p03")
+material_override = SubResource("MatFurniture")
 
 [node name="BarStool2" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.7, 0.35, 0.0)
-mesh = SubResource("MeshRoundStoolPedestal")
-material_override = SubResource("MatCounter")
-
-[node name="BarStool2Seat" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.7, 0.735, 0.0)
-mesh = SubResource("MeshRoundStoolSeat")
-material_override = SubResource("MatCounter")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6, 0, 0.0)
+scale = Vector3(3.0, 3.0, 3.0)
+mesh = ExtResource("m_p03")
+material_override = SubResource("MatFurniture")
 
 [node name="BarStool3" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.7, 0.35, 0.9)
-mesh = SubResource("MeshRoundStoolPedestal")
-material_override = SubResource("MatCounter")
-
-[node name="BarStool3Seat" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.7, 0.735, 0.9)
-mesh = SubResource("MeshRoundStoolSeat")
-material_override = SubResource("MatCounter")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6, 0, 0.9)
+scale = Vector3(3.0, 3.0, 3.0)
+mesh = ExtResource("m_p03")
+material_override = SubResource("MatFurniture")
 [node name="Table" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.8)
 scale = Vector3(6, 6, 6)
@@ -443,21 +431,21 @@ material_override = SubResource("MatFurniture")
 [node name="Barrel1" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.3, 0, -2.9)
 rotation_degrees = Vector3(-90, 0, 0)
-scale = Vector3(1.1, 1.1, 1.1)
+scale = Vector3(1.35, 1.35, 1.35)
 mesh = ExtResource("m_bar")
 material_override = SubResource("MatBarrel")
 
 [node name="Barrel2" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.6, 0, -3.2)
 rotation_degrees = Vector3(-90, 0, 0)
-scale = Vector3(1.1, 1.1, 1.1)
+scale = Vector3(1.35, 1.35, 1.35)
 mesh = ExtResource("m_bar")
 material_override = SubResource("MatBarrel")
 
 [node name="Barrel3" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.3, 0, -2.0)
 rotation_degrees = Vector3(-90, 0, 0)
-scale = Vector3(1.1, 1.1, 1.1)
+scale = Vector3(1.35, 1.35, 1.35)
 mesh = ExtResource("m_bar")
 material_override = SubResource("MatBarrel")
 [node name="Banner1" type="MeshInstance3D" parent="."]
