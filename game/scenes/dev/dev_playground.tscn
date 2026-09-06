@@ -1,111 +1,20 @@
-[gd_scene load_steps=44 format=3]
+[gd_scene format=3 uid="uid://dox5dx6wmnm4c"]
 
-[ext_resource type="Script" path="res://game/scripts/player/player_controller.gd" id="1_pl"]
-[ext_resource type="Script" path="res://game/scripts/player/camera_controller.gd" id="2_cam"]
-[ext_resource type="Script" path="res://game/scripts/interaction/interaction_manager.gd" id="3_mgr"]
-[ext_resource type="Script" path="res://game/scripts/interaction/item_pickup.gd" id="4_pick"]
-[ext_resource type="Script" path="res://game/scripts/inventory/inventory.gd" id="5_inv"]
-[ext_resource type="Script" path="res://game/scripts/ui/debug_hud.gd" id="6_hud"]
+[ext_resource type="Script" uid="uid://djecaekbj1uod" path="res://game/scripts/player/player_controller.gd" id="1_pl"]
+[ext_resource type="Script" uid="uid://ci8wuc2xsipny" path="res://game/scripts/player/camera_controller.gd" id="2_cam"]
+[ext_resource type="Script" uid="uid://dy8u3dyysre5k" path="res://game/scripts/interaction/interaction_manager.gd" id="3_mgr"]
+[ext_resource type="Script" uid="uid://ba247w1x8sphh" path="res://game/scripts/interaction/item_pickup.gd" id="4_pick"]
+[ext_resource type="Script" uid="uid://ry7y2m17x6ey" path="res://game/scripts/inventory/inventory.gd" id="5_inv"]
+[ext_resource type="Script" uid="uid://debohw4f4w64k" path="res://game/scripts/ui/debug_hud.gd" id="6_hud"]
 [ext_resource type="Resource" path="res://game/resources/items/bottle_ale.tres" id="7_item"]
-[ext_resource type="Script" path="res://game/scripts/interaction/item_dropper.gd" id="8_drop"]
+[ext_resource type="Script" uid="uid://c55pht2bncxrn" path="res://game/scripts/interaction/item_dropper.gd" id="8_drop"]
 [ext_resource type="Resource" path="res://game/resources/items/wooden_mug.tres" id="9_mug"]
-[ext_resource type="Script" path="res://game/scripts/tavern/tavern_seat.gd" id="10_seat"]
-[ext_resource type="Script" path="res://game/scripts/tavern/seat_manager.gd" id="11_sm"]
-[ext_resource type="Script" path="res://game/scripts/tavern/order_manager.gd" id="12_om"]
-[ext_resource type="Script" path="res://game/scripts/tavern/customer_spawner.gd" id="13_sp"]
-[ext_resource type="Script" path="res://game/scripts/tavern/dev_playground_root.gd" id="14_root"]
-[ext_resource type="Script" path="res://game/scripts/ui/debug_panel.gd" id="15_panel"]
-
-[sub_resource type="StandardMaterial3D" id="MatFloor"]
-albedo_color = Color(0.42, 0.42, 0.46, 1)
-
-[sub_resource type="StandardMaterial3D" id="MatTable"]
-albedo_color = Color(0.55, 0.36, 0.2, 1)
-
-[sub_resource type="StandardMaterial3D" id="MatCrate"]
-albedo_color = Color(0.45, 0.36, 0.26, 1)
-
-[sub_resource type="StandardMaterial3D" id="MatAmber"]
-albedo_color = Color(0.93, 0.68, 0.25, 1)
-roughness = 0.3
-
-[sub_resource type="StandardMaterial3D" id="MatGreen"]
-albedo_color = Color(0.16, 0.62, 0.33, 1)
-roughness = 0.3
-
-[sub_resource type="StandardMaterial3D" id="MatRed"]
-albedo_color = Color(0.8, 0.18, 0.14, 1)
-roughness = 0.3
-
-[sub_resource type="StandardMaterial3D" id="MatBody"]
-albedo_color = Color(0.58, 0.72, 0.6, 1)
-roughness = 0.5
-
-[sub_resource type="StandardMaterial3D" id="MatWoodLight"]
-albedo_color = Color(0.72, 0.52, 0.3, 1)
-roughness = 0.6
-
-[sub_resource type="StandardMaterial3D" id="MatWoodDark"]
-albedo_color = Color(0.4, 0.27, 0.16, 1)
-roughness = 0.6
-
-[sub_resource type="BoxMesh" id="MeshFloor"]
-size = Vector3(24, 0.2, 24)
-
-[sub_resource type="BoxMesh" id="MeshTable"]
-size = Vector3(1.6, 1.2, 0.9)
-
-[sub_resource type="BoxMesh" id="MeshCrate"]
-size = Vector3(0.5, 0.5, 0.5)
-
-[sub_resource type="CylinderMesh" id="MeshBottle"]
-top_radius = 0.06
-bottom_radius = 0.12
-height = 0.5
-radial_segments = 12
-
-[sub_resource type="CylinderMesh" id="MeshMug"]
-top_radius = 0.08
-bottom_radius = 0.07
-height = 0.5
-radial_segments = 12
-
-[sub_resource type="CapsuleMesh" id="MeshBody"]
-radius = 0.35
-height = 1.8
-
-[sub_resource type="BoxShape3D" id="ShapeFloor"]
-size = Vector3(24, 0.2, 24)
-
-[sub_resource type="BoxShape3D" id="ShapeTable"]
-size = Vector3(1.6, 1.2, 0.9)
-
-[sub_resource type="BoxShape3D" id="ShapeCrate"]
-size = Vector3(0.5, 0.5, 0.5)
-
-[sub_resource type="CylinderShape3D" id="ShapeBottle"]
-radius = 0.11
-height = 0.5
-
-[sub_resource type="CylinderShape3D" id="ShapeMug"]
-radius = 0.08
-height = 0.5
-
-[sub_resource type="CapsuleShape3D" id="ShapeBody"]
-
-[sub_resource type="BoxMesh" id="MeshCounter"]
-size = Vector3(1.4, 0.95, 0.5)
-
-[sub_resource type="BoxMesh" id="MeshChair"]
-size = Vector3(0.5, 0.55, 0.5)
-
-[sub_resource type="BoxMesh" id="MeshDoorSmall"]
-size = Vector3(1.2, 0.06, 0.06)
-
-[sub_resource type="BoxShape3D" id="ShapeCounter"]
-size = Vector3(1.4, 0.95, 0.5)
-radius = 0.35
-height = 1.8
+[ext_resource type="Script" uid="uid://cr7x4jeqrh2rc" path="res://game/scripts/tavern/tavern_seat.gd" id="10_seat"]
+[ext_resource type="Script" uid="uid://c6m2c2epujosx" path="res://game/scripts/tavern/seat_manager.gd" id="11_sm"]
+[ext_resource type="Script" uid="uid://bdclxgar4iqv4" path="res://game/scripts/tavern/order_manager.gd" id="12_om"]
+[ext_resource type="Script" uid="uid://nuee8tkoggwd" path="res://game/scripts/tavern/customer_spawner.gd" id="13_sp"]
+[ext_resource type="Script" uid="uid://78dn6rklx4xk" path="res://game/scripts/tavern/dev_playground_root.gd" id="14_root"]
+[ext_resource type="Script" uid="uid://7fsl4ualnmpc" path="res://game/scripts/ui/debug_panel.gd" id="15_panel"]
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
 
@@ -115,217 +24,305 @@ sky_material = SubResource("SkyMat")
 [sub_resource type="Environment" id="EnvRes"]
 background_mode = 2
 sky = SubResource("SkyRes")
-tonemap_mode = 2
 ambient_light_source = 3
+tonemap_mode = 2
 
-[node name="DevPlayground" type="Node3D"]
+[sub_resource type="StandardMaterial3D" id="MatFloor"]
+albedo_color = Color(0.42, 0.42, 0.46, 1)
+
+[sub_resource type="BoxMesh" id="MeshFloor"]
+size = Vector3(24, 0.2, 24)
+
+[sub_resource type="BoxShape3D" id="ShapeFloor"]
+size = Vector3(24, 0.2, 24)
+
+[sub_resource type="StandardMaterial3D" id="MatTable"]
+albedo_color = Color(0.55, 0.36, 0.2, 1)
+
+[sub_resource type="BoxMesh" id="MeshTable"]
+size = Vector3(1.6, 1.2, 0.9)
+
+[sub_resource type="BoxShape3D" id="ShapeTable"]
+size = Vector3(1.6, 1.2, 0.9)
+
+[sub_resource type="StandardMaterial3D" id="MatCrate"]
+albedo_color = Color(0.45, 0.36, 0.26, 1)
+
+[sub_resource type="BoxMesh" id="MeshCrate"]
+size = Vector3(0.5, 0.5, 0.5)
+
+[sub_resource type="BoxShape3D" id="ShapeCrate"]
+size = Vector3(0.5, 0.5, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="MatAmber"]
+albedo_color = Color(0.93, 0.68, 0.25, 1)
+roughness = 0.3
+
+[sub_resource type="CylinderMesh" id="MeshBottle"]
+top_radius = 0.06
+bottom_radius = 0.12
+height = 0.5
+radial_segments = 12
+
+[sub_resource type="CylinderShape3D" id="ShapeBottle"]
+height = 0.5
+radius = 0.11
+
+[sub_resource type="StandardMaterial3D" id="MatGreen"]
+albedo_color = Color(0.16, 0.62, 0.33, 1)
+roughness = 0.3
+
+[sub_resource type="StandardMaterial3D" id="MatRed"]
+albedo_color = Color(0.8, 0.18, 0.14, 1)
+roughness = 0.3
+
+[sub_resource type="StandardMaterial3D" id="MatWoodLight"]
+albedo_color = Color(0.72, 0.52, 0.3, 1)
+roughness = 0.6
+
+[sub_resource type="CylinderMesh" id="MeshMug"]
+top_radius = 0.08
+bottom_radius = 0.07
+height = 0.5
+radial_segments = 12
+
+[sub_resource type="CylinderShape3D" id="ShapeMug"]
+height = 0.5
+radius = 0.08
+
+[sub_resource type="StandardMaterial3D" id="MatWoodDark"]
+albedo_color = Color(0.4, 0.27, 0.16, 1)
+roughness = 0.6
+
+[sub_resource type="CapsuleShape3D" id="ShapeBody"]
+
+[sub_resource type="StandardMaterial3D" id="MatBody"]
+albedo_color = Color(0.58, 0.72, 0.6, 1)
+roughness = 0.5
+
+[sub_resource type="CapsuleMesh" id="MeshBody"]
+radius = 0.35
+height = 1.8
+
+[sub_resource type="BoxMesh" id="MeshCounter"]
+size = Vector3(1.4, 0.95, 0.5)
+
+[sub_resource type="BoxShape3D" id="ShapeCounter"]
+size = Vector3(1.4, 0.95, 0.5)
+
+[sub_resource type="BoxMesh" id="MeshDoorSmall"]
+size = Vector3(1.2, 0.06, 0.06)
+
+[sub_resource type="BoxMesh" id="MeshChair"]
+size = Vector3(0.5, 0.55, 0.5)
+
+[node name="DevPlayground" type="Node3D" unique_id=497733287]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0059013367, -0.007995129, 0.008200407)
 script = ExtResource("14_root")
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=264291402]
 environment = SubResource("EnvRes")
 
-[node name="Sun" type="DirectionalLight3D" parent="."]
-rotation_degrees = Vector3(-52, -34, 0)
+[node name="Sun" type="DirectionalLight3D" parent="." unique_id=914722579]
+transform = Transform3D(0.8290376, 0.44065, -0.34427354, 0, 0.6156615, 0.7880107, 0.5591929, -0.6532905, 0.51040655, 0, 0, 0)
 shadow_enabled = true
 
-[node name="Ground" type="StaticBody3D" parent="."]
+[node name="Ground" type="StaticBody3D" parent="." unique_id=2020709301]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
 
-[node name="Mesh" type="MeshInstance3D" parent="Ground"]
-mesh = SubResource("MeshFloor")
+[node name="Mesh" type="MeshInstance3D" parent="Ground" unique_id=1788594009]
 material_override = SubResource("MatFloor")
+mesh = SubResource("MeshFloor")
 
-[node name="Collision" type="CollisionShape3D" parent="Ground"]
+[node name="Collision" type="CollisionShape3D" parent="Ground" unique_id=1109130248]
 shape = SubResource("ShapeFloor")
 
-[node name="TableBar" type="StaticBody3D" parent="."]
+[node name="TableBar" type="StaticBody3D" parent="." unique_id=111956360]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0.15)
 
-[node name="Mesh" type="MeshInstance3D" parent="TableBar"]
-mesh = SubResource("MeshTable")
+[node name="Mesh" type="MeshInstance3D" parent="TableBar" unique_id=1281535919]
 material_override = SubResource("MatTable")
+mesh = SubResource("MeshTable")
 
-[node name="Collision" type="CollisionShape3D" parent="TableBar"]
+[node name="Collision" type="CollisionShape3D" parent="TableBar" unique_id=121163965]
 shape = SubResource("ShapeTable")
 
-[node name="CrateA" type="StaticBody3D" parent="."]
+[node name="CrateA" type="StaticBody3D" parent="." unique_id=1402016409]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.8, 0.25, -1.8)
 
-[node name="Mesh" type="MeshInstance3D" parent="CrateA"]
-mesh = SubResource("MeshCrate")
+[node name="Mesh" type="MeshInstance3D" parent="CrateA" unique_id=192119012]
 material_override = SubResource("MatCrate")
+mesh = SubResource("MeshCrate")
 
-[node name="Collision" type="CollisionShape3D" parent="CrateA"]
+[node name="Collision" type="CollisionShape3D" parent="CrateA" unique_id=1447904679]
 shape = SubResource("ShapeCrate")
 
-[node name="CrateB" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.0, 0.25, -4.0)
+[node name="CrateB" type="StaticBody3D" parent="." unique_id=786579004]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0.25, -4)
 
-[node name="Mesh" type="MeshInstance3D" parent="CrateB"]
-mesh = SubResource("MeshCrate")
+[node name="Mesh" type="MeshInstance3D" parent="CrateB" unique_id=977886944]
 material_override = SubResource("MatCrate")
+mesh = SubResource("MeshCrate")
 
-[node name="Collision" type="CollisionShape3D" parent="CrateB"]
+[node name="Collision" type="CollisionShape3D" parent="CrateB" unique_id=348487031]
 shape = SubResource("ShapeCrate")
 
-[node name="Pickups" type="Node3D" parent="."]
+[node name="Pickups" type="Node3D" parent="." unique_id=609177833]
 
-[node name="BottleA" type="StaticBody3D" parent="Pickups"]
+[node name="BottleA" type="StaticBody3D" parent="Pickups" unique_id=2067084379]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.75, 1.45, 0.15)
 collision_layer = 3
 script = ExtResource("4_pick")
 item_definition = ExtResource("7_item")
 
-[node name="Mesh" type="MeshInstance3D" parent="Pickups/BottleA"]
-mesh = SubResource("MeshBottle")
+[node name="Mesh" type="MeshInstance3D" parent="Pickups/BottleA" unique_id=1154384577]
 material_override = SubResource("MatAmber")
+mesh = SubResource("MeshBottle")
 
-[node name="Collision" type="CollisionShape3D" parent="Pickups/BottleA"]
+[node name="Collision" type="CollisionShape3D" parent="Pickups/BottleA" unique_id=931336782]
 shape = SubResource("ShapeBottle")
 
-[node name="BottleB" type="StaticBody3D" parent="Pickups"]
+[node name="BottleB" type="StaticBody3D" parent="Pickups" unique_id=681388471]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.45, 0.15)
 collision_layer = 3
 script = ExtResource("4_pick")
 item_definition = ExtResource("7_item")
 
-[node name="Mesh" type="MeshInstance3D" parent="Pickups/BottleB"]
-mesh = SubResource("MeshBottle")
+[node name="Mesh" type="MeshInstance3D" parent="Pickups/BottleB" unique_id=1715562192]
 material_override = SubResource("MatGreen")
+mesh = SubResource("MeshBottle")
 
-[node name="Collision" type="CollisionShape3D" parent="Pickups/BottleB"]
+[node name="Collision" type="CollisionShape3D" parent="Pickups/BottleB" unique_id=769812656]
 shape = SubResource("ShapeBottle")
 
-[node name="BottleC" type="StaticBody3D" parent="Pickups"]
+[node name="BottleC" type="StaticBody3D" parent="Pickups" unique_id=1036260240]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.75, 1.45, 0.15)
 collision_layer = 3
 script = ExtResource("4_pick")
 item_definition = ExtResource("7_item")
 
-[node name="Mesh" type="MeshInstance3D" parent="Pickups/BottleC"]
-mesh = SubResource("MeshBottle")
+[node name="Mesh" type="MeshInstance3D" parent="Pickups/BottleC" unique_id=1305617451]
 material_override = SubResource("MatRed")
+mesh = SubResource("MeshBottle")
 
-[node name="Collision" type="CollisionShape3D" parent="Pickups/BottleC"]
+[node name="Collision" type="CollisionShape3D" parent="Pickups/BottleC" unique_id=596041895]
 shape = SubResource("ShapeBottle")
 
-[node name="MugA" type="StaticBody3D" parent="Pickups"]
+[node name="MugA" type="StaticBody3D" parent="Pickups" unique_id=2066477465]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.375, 1.45, 0.15)
 collision_layer = 3
 script = ExtResource("4_pick")
 item_definition = ExtResource("9_mug")
 
-[node name="Mesh" type="MeshInstance3D" parent="Pickups/MugA"]
-mesh = SubResource("MeshMug")
+[node name="Mesh" type="MeshInstance3D" parent="Pickups/MugA" unique_id=1816366332]
 material_override = SubResource("MatWoodLight")
+mesh = SubResource("MeshMug")
 
-[node name="Collision" type="CollisionShape3D" parent="Pickups/MugA"]
+[node name="Collision" type="CollisionShape3D" parent="Pickups/MugA" unique_id=519229362]
 shape = SubResource("ShapeMug")
 
-[node name="MugB" type="StaticBody3D" parent="Pickups"]
+[node name="MugB" type="StaticBody3D" parent="Pickups" unique_id=1985406412]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.375, 1.45, 0.15)
 collision_layer = 3
 script = ExtResource("4_pick")
 item_definition = ExtResource("9_mug")
 
-[node name="Mesh" type="MeshInstance3D" parent="Pickups/MugB"]
-mesh = SubResource("MeshMug")
+[node name="Mesh" type="MeshInstance3D" parent="Pickups/MugB" unique_id=1694783201]
 material_override = SubResource("MatWoodDark")
+mesh = SubResource("MeshMug")
 
-[node name="Collision" type="CollisionShape3D" parent="Pickups/MugB"]
+[node name="Collision" type="CollisionShape3D" parent="Pickups/MugB" unique_id=989676337]
 shape = SubResource("ShapeMug")
 
-[node name="Player" type="CharacterBody3D" parent="."]
+[node name="Player" type="CharacterBody3D" parent="." unique_id=2020021077]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 2.6)
-collision_layer = 1
-collision_mask = 1
 script = ExtResource("1_pl")
 
-[node name="Collision" type="CollisionShape3D" parent="Player"]
+[node name="Collision" type="CollisionShape3D" parent="Player" unique_id=1939274381]
 shape = SubResource("ShapeBody")
 
-[node name="BodyMesh" type="MeshInstance3D" parent="Player"]
-mesh = SubResource("MeshBody")
+[node name="BodyMesh" type="MeshInstance3D" parent="Player" unique_id=924679897]
 material_override = SubResource("MatBody")
+mesh = SubResource("MeshBody")
 
-[node name="Inventory" type="Node" parent="Player"]
+[node name="Inventory" type="Node" parent="Player" unique_id=1822728848]
 script = ExtResource("5_inv")
 inventory_id = &"player_inventory"
 
-[node name="CameraRig" type="Node3D" parent="Player"]
+[node name="CameraRig" type="Node3D" parent="Player" unique_id=830843718]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
 script = ExtResource("2_cam")
 
-[node name="Camera3D" type="Camera3D" parent="Player/CameraRig"]
+[node name="Camera3D" type="Camera3D" parent="Player/CameraRig" unique_id=1691145332]
 current = true
 
-[node name="InteractionManager" type="Node3D" parent="Player"]
+[node name="InteractionManager" type="Node3D" parent="Player" unique_id=2123533411]
 script = ExtResource("3_mgr")
 
-[node name="ItemDropper" type="Node3D" parent="Player"]
+[node name="ItemDropper" type="Node3D" parent="Player" unique_id=2065130457]
 script = ExtResource("8_drop")
 
-[node name="TavernZone" type="Node3D" parent="."]
+[node name="TavernZone" type="Node3D" parent="." unique_id=871575901]
 
-[node name="ZoneCounter" type="StaticBody3D" parent="TavernZone"]
+[node name="ZoneCounter" type="StaticBody3D" parent="TavernZone" unique_id=1573003722]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3, 0.475, -2.3)
 
-[node name="Mesh" type="MeshInstance3D" parent="TavernZone/ZoneCounter"]
-mesh = SubResource("MeshCounter")
+[node name="Mesh" type="MeshInstance3D" parent="TavernZone/ZoneCounter" unique_id=648725266]
 material_override = SubResource("MatTable")
+mesh = SubResource("MeshCounter")
 
-[node name="Collision" type="CollisionShape3D" parent="TavernZone/ZoneCounter"]
+[node name="Collision" type="CollisionShape3D" parent="TavernZone/ZoneCounter" unique_id=2011014383]
 shape = SubResource("ShapeCounter")
 
-[node name="Door" type="Node3D" parent="TavernZone"]
+[node name="Door" type="Node3D" parent="TavernZone" unique_id=1008765882]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.9, 0, -3.6)
 
-[node name="Sign" type="MeshInstance3D" parent="TavernZone/Door"]
+[node name="Sign" type="MeshInstance3D" parent="TavernZone/Door" unique_id=1965936024]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, 0)
-mesh = SubResource("MeshDoorSmall")
 material_override = SubResource("MatCrate")
+mesh = SubResource("MeshDoorSmall")
 
-[node name="Seats" type="Node3D" parent="TavernZone"]
+[node name="Seats" type="Node3D" parent="TavernZone" unique_id=1417972358]
 
-[node name="SeatA" type="Node3D" parent="TavernZone/Seats"]
+[node name="SeatA" type="Node3D" parent="TavernZone/Seats" unique_id=551092692]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0, -1.5)
 script = ExtResource("10_seat")
 seat_id = &"seat_a"
 
-[node name="Chair" type="MeshInstance3D" parent="TavernZone/Seats/SeatA"]
+[node name="Chair" type="MeshInstance3D" parent="TavernZone/Seats/SeatA" unique_id=2048050518]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.275, 0)
-mesh = SubResource("MeshChair")
 material_override = SubResource("MatCrate")
+mesh = SubResource("MeshChair")
 
-[node name="SeatB" type="Node3D" parent="TavernZone/Seats"]
+[node name="SeatB" type="Node3D" parent="TavernZone/Seats" unique_id=473308449]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.45, 0, -1.5)
 script = ExtResource("10_seat")
 seat_id = &"seat_b"
 
-[node name="Chair" type="MeshInstance3D" parent="TavernZone/Seats/SeatB"]
+[node name="Chair" type="MeshInstance3D" parent="TavernZone/Seats/SeatB" unique_id=1599649063]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.275, 0)
-mesh = SubResource("MeshChair")
 material_override = SubResource("MatWoodDark")
+mesh = SubResource("MeshChair")
 
-[node name="SeatManager" type="Node" parent="TavernZone"]
+[node name="SeatManager" type="Node" parent="TavernZone" unique_id=1589129506]
 script = ExtResource("11_sm")
 
-[node name="OrderManager" type="Node" parent="TavernZone"]
+[node name="OrderManager" type="Node" parent="TavernZone" unique_id=327995394]
 script = ExtResource("12_om")
 
-[node name="CustomerSpawner" type="Node" parent="TavernZone"]
+[node name="CustomerSpawner" type="Node" parent="TavernZone" unique_id=248674808]
 script = ExtResource("13_sp")
 
-[node name="UI" type="CanvasLayer" parent="."]
+[node name="UI" type="CanvasLayer" parent="." unique_id=628602034]
 script = ExtResource("6_hud")
 
-[node name="DebugText" type="Label" parent="UI"]
+[node name="DebugText" type="Label" parent="UI" unique_id=37531520]
 offset_left = 12.0
 offset_top = 12.0
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
 theme_override_constants/outline_size = 4
 theme_override_font_sizes/font_size = 14
 
-[node name="DebugPanel" type="CanvasLayer" parent="."]
+[node name="DebugPanel" type="CanvasLayer" parent="." unique_id=134727430]
 layer = 2
 script = ExtResource("15_panel")
