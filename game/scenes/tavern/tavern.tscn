@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=3]
+[gd_scene load_steps=75 format=3]
 
 [ext_resource type="Mesh" path="res://game/art/tavern/wooden+furniture+3d+model/tripo_convert_b1713160-0a9c-4227-bd75-522ffa10b8e8.obj" id="m_fur"]
 [ext_resource type="Texture2D" path="res://game/art/tavern/wooden+furniture+3d+model/_basecolor.jpg" id="t_fur"]
@@ -11,6 +11,20 @@
 [ext_resource type="Texture2D" path="res://game/art/tavern/medieval+wall+panels+3d+model/tripo_convert_8fb98191-fde4-4b97-8b29-9399f46a52d6.fbm/medieval_wall_panels_3d_model_tripo_part_0_basecolor.JPEG" id="t_w0"]
 [ext_resource type="Texture2D" path="res://game/art/tavern/medieval+wall+panels+3d+model/tripo_convert_8fb98191-fde4-4b97-8b29-9399f46a52d6.fbm/medieval_wall_panels_3d_model_tripo_part_1_basecolor.JPEG" id="t_w1"]
 [ext_resource type="Texture2D" path="res://game/art/tavern/medieval+wall+panels+3d+model/tripo_convert_8fb98191-fde4-4b97-8b29-9399f46a52d6.fbm/medieval_wall_panels_3d_model_tripo_part_3_basecolor.JPEG" id="t_w3"]
+[ext_resource type="Script" path="res://game/scripts/player/player_controller.gd" id="s_pl"]
+[ext_resource type="Script" path="res://game/scripts/player/camera_controller.gd" id="s_cam"]
+[ext_resource type="Script" path="res://game/scripts/interaction/interaction_manager.gd" id="s_mgr"]
+[ext_resource type="Script" path="res://game/scripts/interaction/item_dropper.gd" id="s_drop"]
+[ext_resource type="Script" path="res://game/scripts/interaction/item_pickup.gd" id="s_pick"]
+[ext_resource type="Script" path="res://game/scripts/inventory/inventory.gd" id="s_inv"]
+[ext_resource type="Script" path="res://game/scripts/ui/debug_hud.gd" id="s_hud"]
+[ext_resource type="Script" path="res://game/scripts/ui/debug_panel.gd" id="s_panel"]
+[ext_resource type="Script" path="res://game/scripts/tavern/tavern_seat.gd" id="s_seat"]
+[ext_resource type="Script" path="res://game/scripts/tavern/seat_manager.gd" id="s_sm"]
+[ext_resource type="Script" path="res://game/scripts/tavern/order_manager.gd" id="s_om"]
+[ext_resource type="Script" path="res://game/scripts/tavern/customer_spawner.gd" id="s_sp"]
+[ext_resource type="Script" path="res://game/scripts/tavern/dev_playground_root.gd" id="s_root"]
+[ext_resource type="Resource" path="res://game/resources/items/bottle_ale.tres" id="r_bottle"]
 
 [sub_resource type="StandardMaterial3D" id="MatFloor"]
 albedo_color = Color(0.34, 0.22, 0.12, 1)
@@ -42,6 +56,9 @@ roughness = 0.7
 [sub_resource type="StandardMaterial3D" id="MatCounter"]
 albedo_color = Color(0.3, 0.18, 0.1, 1)
 roughness = 0.6
+[sub_resource type="StandardMaterial3D" id="MatAmber"]
+albedo_color = Color(0.93, 0.68, 0.25, 1)
+roughness = 0.3
 [sub_resource type="StandardMaterial3D" id="MatStone"]
 albedo_color = Color(0.42, 0.4, 0.38, 1)
 roughness = 0.95
@@ -50,20 +67,31 @@ albedo_color = Color(1.0, 0.55, 0.2, 1)
 emission_enabled = true
 emission = Color(1.0, 0.45, 0.12, 1)
 emission_energy_multiplier = 3.0
+[sub_resource type="StandardMaterial3D" id="MatRug"]
+albedo_color = Color(0.5, 0.18, 0.16, 1)
+roughness = 0.9
+[sub_resource type="StandardMaterial3D" id="MatPlant"]
+albedo_color = Color(0.2, 0.45, 0.2, 1)
+roughness = 0.8
+[sub_resource type="StandardMaterial3D" id="MatPlayer"]
+albedo_color = Color(0.58, 0.72, 0.6, 1)
+roughness = 0.5
 [sub_resource type="BoxMesh" id="MeshFloor"]
 size = Vector3(14, 0.2, 10)
-[sub_resource type="BoxMesh" id="MeshWallX"]
-size = Vector3(14, 4, 0.3)
 [sub_resource type="BoxMesh" id="MeshWallZ"]
 size = Vector3(0.3, 4, 10)
-[sub_resource type="BoxMesh" id="MeshWallSeg"]
-size = Vector3(5.5, 4, 0.3)
+[sub_resource type="BoxMesh" id="MeshSegWide"]
+size = Vector3(11, 4, 0.3)
+[sub_resource type="BoxMesh" id="MeshSegSmall"]
+size = Vector3(1, 4, 0.3)
+[sub_resource type="BoxMesh" id="MeshSegS"]
+size = Vector3(6, 4, 0.3)
 [sub_resource type="BoxMesh" id="MeshCeiling"]
 size = Vector3(14, 0.2, 10)
 [sub_resource type="BoxMesh" id="MeshCounter"]
-size = Vector3(4.5, 1.1, 0.9)
+size = Vector3(0.9, 1.1, 4.5)
 [sub_resource type="BoxMesh" id="MeshShelf"]
-size = Vector3(0.6, 2.6, 3.4)
+size = Vector3(0.5, 2.6, 4.0)
 [sub_resource type="BoxMesh" id="MeshStone"]
 size = Vector3(1.1, 2.4, 0.9)
 [sub_resource type="BoxMesh" id="MeshChimney"]
@@ -72,6 +100,55 @@ size = Vector3(1.4, 3.4, 1.1)
 size = Vector3(0.5, 0.6, 0.25)
 [sub_resource type="BoxMesh" id="MeshLoft"]
 size = Vector3(13, 0.2, 3.4)
+[sub_resource type="BoxMesh" id="MeshRug"]
+size = Vector3(3.2, 0.05, 2.2)
+[sub_resource type="BoxMesh" id="MeshChair"]
+size = Vector3(0.5, 0.55, 0.5)
+[sub_resource type="CylinderMesh" id="MeshBottle"]
+top_radius = 0.06
+bottom_radius = 0.11
+height = 0.5
+[sub_resource type="CylinderMesh" id="MeshLampPole"]
+top_radius = 0.05
+bottom_radius = 0.05
+height = 0.7
+[sub_resource type="CylinderMesh" id="MeshLampRing"]
+top_radius = 0.5
+bottom_radius = 0.5
+height = 0.07
+[sub_resource type="CylinderMesh" id="MeshPlantPot"]
+top_radius = 0.3
+bottom_radius = 0.22
+height = 0.35
+[sub_resource type="CylinderMesh" id="MeshPlantLeaf"]
+top_radius = 0.08
+bottom_radius = 0.45
+height = 0.95
+[sub_resource type="CapsuleMesh" id="MeshPlayer"]
+radius = 0.35
+height = 1.8
+[sub_resource type="BoxShape3D" id="ShapeFloor"]
+size = Vector3(14, 0.2, 10)
+[sub_resource type="BoxShape3D" id="ShapeWallZ"]
+size = Vector3(0.3, 4, 10)
+[sub_resource type="BoxShape3D" id="ShapeSegWide"]
+size = Vector3(11, 4, 0.3)
+[sub_resource type="BoxShape3D" id="ShapeSegSmall"]
+size = Vector3(1, 4, 0.3)
+[sub_resource type="BoxShape3D" id="ShapeSegS"]
+size = Vector3(6, 4, 0.3)
+[sub_resource type="BoxShape3D" id="ShapeCounter"]
+size = Vector3(0.9, 1.1, 4.5)
+[sub_resource type="BoxShape3D" id="ShapeStone"]
+size = Vector3(1.1, 2.4, 0.9)
+[sub_resource type="BoxShape3D" id="ShapeChimney"]
+size = Vector3(1.4, 3.4, 1.1)
+[sub_resource type="CylinderShape3D" id="ShapeBottle"]
+radius = 0.11
+height = 0.5
+[sub_resource type="CapsuleShape3D" id="ShapePlayer"]
+radius = 0.35
+height = 1.8
 [sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
 [sub_resource type="Sky" id="SkyRes"]
 sky_material = SubResource("SkyMat")
@@ -82,6 +159,7 @@ tonemap_mode = 2
 ambient_light_source = 3
 
 [node name="Tavern" type="Node3D"]
+script = ExtResource("s_root")
 
 [node name="Environment" type="WorldEnvironment" parent="."]
 environment = SubResource("EnvRes")
@@ -92,35 +170,75 @@ light_color = Color(1.0, 0.86, 0.72, 1)
 light_energy = 1.1
 shadow_enabled = true
 
-[node name="Floor" type="MeshInstance3D" parent="."]
+[node name="FloorBody" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="FloorBody"]
 mesh = SubResource("MeshFloor")
 material_override = SubResource("MatFloor")
 
-[node name="WallN" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -4.9)
-mesh = SubResource("MeshWallX")
+[node name="Collision" type="CollisionShape3D" parent="FloorBody"]
+shape = SubResource("ShapeFloor")
+
+[node name="WallN_L" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 2, -4.85)
+
+[node name="Mesh" type="MeshInstance3D" parent="WallN_L"]
+mesh = SubResource("MeshSegWide")
 material_override = SubResource("MatWall0")
 
-[node name="WallS_L" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.75, 2, 4.9)
-mesh = SubResource("MeshWallSeg")
+[node name="Collision" type="CollisionShape3D" parent="WallN_L"]
+shape = SubResource("ShapeSegWide")
+
+[node name="WallN_R" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, 2, -4.85)
+
+[node name="Mesh" type="MeshInstance3D" parent="WallN_R"]
+mesh = SubResource("MeshSegSmall")
+material_override = SubResource("MatWall0")
+
+[node name="Collision" type="CollisionShape3D" parent="WallN_R"]
+shape = SubResource("ShapeSegSmall")
+
+[node name="WallS_L" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 2, 4.85)
+
+[node name="Mesh" type="MeshInstance3D" parent="WallS_L"]
+mesh = SubResource("MeshSegS")
 material_override = SubResource("MatWall1")
 
-[node name="WallS_R" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.75, 2, 4.9)
-mesh = SubResource("MeshWallSeg")
+[node name="Collision" type="CollisionShape3D" parent="WallS_L"]
+shape = SubResource("ShapeSegS")
+
+[node name="WallS_R" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 2, 4.85)
+
+[node name="Mesh" type="MeshInstance3D" parent="WallS_R"]
+mesh = SubResource("MeshSegS")
 material_override = SubResource("MatWall1")
 
-[node name="WallE" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.9, 2, 0)
+[node name="Collision" type="CollisionShape3D" parent="WallS_R"]
+shape = SubResource("ShapeSegS")
+
+[node name="WallE" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.85, 2, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="WallE"]
 mesh = SubResource("MeshWallZ")
 material_override = SubResource("MatWall3")
 
-[node name="WallW" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.9, 2, 0)
+[node name="Collision" type="CollisionShape3D" parent="WallE"]
+shape = SubResource("ShapeWallZ")
+
+[node name="WallW" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.85, 2, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="WallW"]
 mesh = SubResource("MeshWallZ")
 material_override = SubResource("MatWall3")
+
+[node name="Collision" type="CollisionShape3D" parent="WallW"]
+shape = SubResource("ShapeWallZ")
 
 [node name="Ceiling" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.9, 0)
@@ -128,110 +246,310 @@ mesh = SubResource("MeshCeiling")
 material_override = SubResource("MatCeiling")
 
 [node name="Loft" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.0, 3.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.0, 3.4)
 mesh = SubResource("MeshLoft")
 material_override = SubResource("MatCeiling")
-[node name="BarCounter" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 0.55, -4.3)
+
+[node name="BarCounter" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.8, 0.55, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="BarCounter"]
 mesh = SubResource("MeshCounter")
 material_override = SubResource("MatCounter")
 
+[node name="Collision" type="CollisionShape3D" parent="BarCounter"]
+shape = SubResource("ShapeCounter")
+
 [node name="BarShelf" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.6, 1.3, -3.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.4, 1.3, 0)
 mesh = SubResource("MeshShelf")
 material_override = SubResource("MatCounter")
-[node name="Fireplace" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.3, 1.2, -2.4)
+
+[node name="Fireplace" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.2, 1.2, 4.2)
+
+[node name="Mesh" type="MeshInstance3D" parent="Fireplace"]
 mesh = SubResource("MeshStone")
 material_override = SubResource("MatStone")
 
-[node name="Chimney" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.6, 1.7, -2.4)
+[node name="Collision" type="CollisionShape3D" parent="Fireplace"]
+shape = SubResource("ShapeStone")
+
+[node name="Chimney" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.0, 1.7, 4.2)
+
+[node name="Mesh" type="MeshInstance3D" parent="Chimney"]
 mesh = SubResource("MeshChimney")
 material_override = SubResource("MatStone")
 
+[node name="Collision" type="CollisionShape3D" parent="Chimney"]
+shape = SubResource("ShapeChimney")
+
 [node name="Fire" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.95, 0.85, -2.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.85, 0.85, 4.2)
 mesh = SubResource("MeshFire")
 material_override = SubResource("MatFire")
 
 [node name="FireLight" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.1, 1.3, -2.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.9, 1.3, 4.2)
 light_color = Color(1.0, 0.55, 0.25, 1)
 light_energy = 2.0
 omni_range = 9.0
+
 [node name="Stairs" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.6, 0, 3.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.6, 0, 3.8)
 scale = Vector3(2, 2, 2)
 mesh = ExtResource("m_sta")
 material_override = SubResource("MatStairs")
+
 [node name="TableSet" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 0, 2.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0, 2.5)
 scale = Vector3(2, 2, 2)
 mesh = ExtResource("m_fur")
 material_override = SubResource("MatFurniture")
+
 [node name="TableSet" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.2, 0, 0.8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, -1)
 scale = Vector3(2, 2, 2)
 mesh = ExtResource("m_fur")
 material_override = SubResource("MatFurniture")
+
 [node name="TableSet" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0, 2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 0, -3)
 scale = Vector3(2, 2, 2)
 mesh = ExtResource("m_fur")
 material_override = SubResource("MatFurniture")
+
 [node name="TableSet" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4, 0, -1.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -3)
 scale = Vector3(2, 2, 2)
 mesh = ExtResource("m_fur")
 material_override = SubResource("MatFurniture")
+
 [node name="Barrel" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.8, 0, 1.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.4, 0, -2)
 scale = Vector3(1.7, 1.7, 1.7)
 mesh = ExtResource("m_bar")
 material_override = SubResource("MatBarrel")
+
 [node name="Barrel" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.2, 0, 2.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.4, 0, 2)
 scale = Vector3(1.7, 1.7, 1.7)
 mesh = ExtResource("m_bar")
 material_override = SubResource("MatBarrel")
+
 [node name="Barrel" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.8, 0, 3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.4, 0, -3.6)
 scale = Vector3(1.7, 1.7, 1.7)
 mesh = ExtResource("m_bar")
 material_override = SubResource("MatBarrel")
+
 [node name="Barrel" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.4, 0, 3.6)
 scale = Vector3(1.7, 1.7, 1.7)
 mesh = ExtResource("m_bar")
 material_override = SubResource("MatBarrel")
+
 [node name="Barrel" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, -4.3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, -4.4)
 scale = Vector3(1.7, 1.7, 1.7)
 mesh = ExtResource("m_bar")
 material_override = SubResource("MatBarrel")
+
 [node name="Barrel" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6, 0, -4.3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, -4.4)
 scale = Vector3(1.7, 1.7, 1.7)
 mesh = ExtResource("m_bar")
 material_override = SubResource("MatBarrel")
+
 [node name="Banner" type="MeshInstance3D" parent="."]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -1.5, 2.6, -4.75)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 2.6, -4.7)
 scale = Vector3(1.2, 1.2, 1.2)
 mesh = ExtResource("m_ban")
 material_override = SubResource("MatBanner")
+
 [node name="Banner" type="MeshInstance3D" parent="."]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 2, 2.6, -4.75)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2.6, -4.7)
 scale = Vector3(1.2, 1.2, 1.2)
 mesh = ExtResource("m_ban")
 material_override = SubResource("MatBanner")
-[node name="Lamp" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4, 0)
-light_color = Color(1.0, 0.78, 0.5, 1)
-light_energy = 1.0
+[node name="LampPole0" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.1, 0)
+mesh = SubResource("MeshLampPole")
+material_override = SubResource("MatCounter")
+
+[node name="LampRing0" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.0, 0)
+mesh = SubResource("MeshLampRing")
+material_override = SubResource("MatCounter")
+
+[node name="LampLight0" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.9, 0)
+light_color = Color(1.0, 0.8, 0.5, 1)
+light_energy = 1.2
+omni_range = 14.0
+
+[node name="LampLight1" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 2.9, -2)
+light_color = Color(1.0, 0.8, 0.5, 1)
+light_energy = 0.9
 omni_range = 12.0
-[node name="Lamp" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 3.4, -3)
-light_color = Color(1.0, 0.78, 0.5, 1)
-light_energy = 1.0
+
+[node name="LampLight2" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 2.9, -2)
+light_color = Color(1.0, 0.8, 0.5, 1)
+light_energy = 0.9
 omni_range = 12.0
+
+[node name="PlantPot" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.18, 4.3)
+mesh = SubResource("MeshPlantPot")
+material_override = SubResource("MatPlant")
+
+[node name="PlantLeaf" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.75, 4.3)
+mesh = SubResource("MeshPlantLeaf")
+material_override = SubResource("MatPlant")
+
+[node name="PlantPot" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.18, 4.3)
+mesh = SubResource("MeshPlantPot")
+material_override = SubResource("MatPlant")
+
+[node name="PlantLeaf" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.75, 4.3)
+mesh = SubResource("MeshPlantLeaf")
+material_override = SubResource("MatPlant")
+[node name="Rug" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0, 0.03, 0.5)
+mesh = SubResource("MeshRug")
+material_override = SubResource("MatRug")
+
+[node name="TavernZone" type="Node3D" parent="."]
+
+[node name="Door" type="Node3D" parent="TavernZone"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.0, 0, -4.6)
+
+[node name="Seats" type="Node3D" parent="TavernZone"]
+
+[node name="SeatA" type="Node3D" parent="TavernZone/Seats"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.3, 0, -2.4)
+script = ExtResource("s_seat")
+seat_id = &"seat_a"
+
+[node name="Chair" type="MeshInstance3D" parent="TavernZone/Seats/SeatA"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.275, 0)
+mesh = SubResource("MeshChair")
+material_override = SubResource("MatCounter")
+
+[node name="SeatB" type="Node3D" parent="TavernZone/Seats"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.3, 0, -0.4)
+script = ExtResource("s_seat")
+seat_id = &"seat_b"
+
+[node name="Chair" type="MeshInstance3D" parent="TavernZone/Seats/SeatB"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.275, 0)
+mesh = SubResource("MeshChair")
+material_override = SubResource("MatCounter")
+
+[node name="SeatC" type="Node3D" parent="TavernZone/Seats"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.3, 0, 1.6)
+script = ExtResource("s_seat")
+seat_id = &"seat_c"
+
+[node name="Chair" type="MeshInstance3D" parent="TavernZone/Seats/SeatC"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.275, 0)
+mesh = SubResource("MeshChair")
+material_override = SubResource("MatCounter")
+
+[node name="SeatManager" type="Node" parent="TavernZone"]
+script = ExtResource("s_sm")
+
+[node name="OrderManager" type="Node" parent="TavernZone"]
+script = ExtResource("s_om")
+
+[node name="CustomerSpawner" type="Node" parent="TavernZone"]
+script = ExtResource("s_sp")
+
+[node name="BottlePickupA" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.8, 1.35, -1.0)
+collision_layer = 3
+script = ExtResource("s_pick")
+item_definition = ExtResource("r_bottle")
+
+[node name="Mesh" type="MeshInstance3D" parent="BottlePickupA"]
+mesh = SubResource("MeshBottle")
+material_override = SubResource("MatAmber")
+
+[node name="Collision" type="CollisionShape3D" parent="BottlePickupA"]
+shape = SubResource("ShapeBottle")
+
+[node name="BottlePickupB" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.8, 1.35, 0.0)
+collision_layer = 3
+script = ExtResource("s_pick")
+item_definition = ExtResource("r_bottle")
+
+[node name="Mesh" type="MeshInstance3D" parent="BottlePickupB"]
+mesh = SubResource("MeshBottle")
+material_override = SubResource("MatAmber")
+
+[node name="Collision" type="CollisionShape3D" parent="BottlePickupB"]
+shape = SubResource("ShapeBottle")
+
+[node name="BottlePickupC" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.8, 1.35, 1.0)
+collision_layer = 3
+script = ExtResource("s_pick")
+item_definition = ExtResource("r_bottle")
+
+[node name="Mesh" type="MeshInstance3D" parent="BottlePickupC"]
+mesh = SubResource("MeshBottle")
+material_override = SubResource("MatAmber")
+
+[node name="Collision" type="CollisionShape3D" parent="BottlePickupC"]
+shape = SubResource("ShapeBottle")
+
+[node name="Player" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 3.0)
+collision_layer = 1
+collision_mask = 1
+script = ExtResource("s_pl")
+
+[node name="Collision" type="CollisionShape3D" parent="Player"]
+shape = SubResource("ShapePlayer")
+
+[node name="BodyMesh" type="MeshInstance3D" parent="Player"]
+mesh = SubResource("MeshPlayer")
+material_override = SubResource("MatPlayer")
+
+[node name="Inventory" type="Node" parent="Player"]
+script = ExtResource("s_inv")
+inventory_id = &"player_inventory"
+
+[node name="CameraRig" type="Node3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+script = ExtResource("s_cam")
+
+[node name="Camera3D" type="Camera3D" parent="Player/CameraRig"]
+current = true
+
+[node name="InteractionManager" type="Node3D" parent="Player"]
+script = ExtResource("s_mgr")
+
+[node name="ItemDropper" type="Node3D" parent="Player"]
+script = ExtResource("s_drop")
+
+[node name="UI" type="CanvasLayer" parent="."]
+script = ExtResource("s_hud")
+
+[node name="DebugText" type="Label" parent="UI"]
+offset_left = 12.0
+offset_top = 12.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 14
+
+[node name="DebugPanel" type="CanvasLayer" parent="."]
+layer = 2
+script = ExtResource("s_panel")

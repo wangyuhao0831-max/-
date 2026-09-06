@@ -12,7 +12,7 @@ config_version=5
 
 config/name="Project Arcane Tavern"
 config/description="Vertical Slice foundation for a 3D, AI-driven tavern management & social simulation game (Godot 4.x). Godot is the single source of truth; AI output is advisory only and always passes through Godot-side rule validation."
-run/main_scene="res://game/scenes/dev/dev_playground.tscn"
+run/main_scene="res://game/scenes/tavern/tavern.tscn"
 config/features=PackedStringArray("4.7")
 config/icon="res://icon.svg"
 

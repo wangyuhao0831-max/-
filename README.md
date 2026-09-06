@@ -2,7 +2,7 @@
 
 3D AI 魔法酒馆经营 / 社交模拟游戏 —— Vertical Slice 基础架构（Godot 4.7.x / GDScript 严格类型）。
 
-> **当前阶段：Phase 0–2C 完成（Vertical Slice Stabilization）。** 可连续游玩 5–10 分钟的完整最小循环：营业日（StartDay→OpenTavern→Service→CloseTavern→DaySummary→NextDay）、顾客流、订单成功/失败、金币/成本/利润、声望、日结算、自动存档、调试面板/时间倍率。
+> **当前阶段：Phase 0–2C 完成 + 真实酒馆场景（主场景）**：可连续游玩 5–10 分钟的完整最小循环已在**真实酒馆**（含碰撞/玩家/NPC 座位/吧台拾取/交付）中运行；自动回归经 GameManager 自动切回灰盒基准场景。 可连续游玩 5–10 分钟的完整最小循环：营业日（StartDay→OpenTavern→Service→CloseTavern→DaySummary→NextDay）、顾客流、订单成功/失败、金币/成本/利润、声望、日结算、自动存档、调试面板/时间倍率。
 > 详细进度见 [`docs/TASKS.md`](docs/TASKS.md)。
 
 ## 铁律（摘要，完整约束见 docs/ARCHITECTURE.md）
@@ -32,10 +32,10 @@ project root  = res:// 根（Godot 工程根）
 │  │  ├─ save/          # SaveManager（最小 JSON 存档）✅（2C）
 │  │  ├─ ai/            # AIClient 接口 / MockAIClient（后续 Goal；NPC 决策点已预留）
 │  │  └─ ui/            # DebugHUD + DebugPanel（调试 UI；仅订阅/按钮驱动，R8）
-│  ├─ scenes/           # 场景（dev/：dev_playground 主场景 + npc_customer 模板 + dropped_pickup；tavern/：真实酒馆预览）
+│  ├─ scenes/           # 场景（tavern/tavern.tscn=主场景 真实酒馆；dev/dev_playground＝灰盒回归基准 + npc_customer 模板 + dropped_pickup）
 │  ├─ art/              # 本地模型/贴图资产：tavern/**（家具/木桶/旗帜/楼梯 + 墙板）⭐已接入
 │  ├─ resources/        # 数据驱动配置：items/*.tres、npcs/*.tres（DataRegistry 启动扫描）
-│  └─ tests/            # headless 自动化测试（--smoke* / --check-tavern）
+│  └─ tests/            # headless 自动化测试（--smoke* / --check-tavern / --smoke-tavern）
 ├─ docs/                # 工程文档（架构 / 编码规范 / TASKS 验收）
 ├─ icon.svg
 └─ project.godot        # Godot 4.7（config_version=5；autoload×5 + InputMap）
@@ -71,8 +71,11 @@ $gd = 'D:\Godot\Godot_v4.7.2-stable_win64_console.exe'
 # 6) Phase 2C 双营业日验收：顾客流/订单成败/经济/声望/结算/存档/次日
 & $gd --headless --path . --quit-after 9000 -- --smoke-days
 # 7) 真实酒馆场景加载检查
-& $gd --headless --path . --quit-after 900 -- --check-tavern
+& $gd --headless --path . --quit-after 600 -- --check-tavern
+# 8) 真实酒馆顾客闭环验证（开张/寻路/拾取/交付/离场/座位释放）
+& $gd --headless --path . --quit-after 12000 -- --smoke-tavern
 ```
+运行方式：Godot 4.7.2 打开 `project.godot` → F5 进入**真实酒馆主场景**（含调试面板）。约 12 秒后开张，顾客从东北门进店就座下单；到吧台 E 拾取酒瓶（或面板补货），对准座位上的顾客 E 交付；面板支持生成顾客/加金币/快进/关门/暂停/倍率。带 `--smoke*` 参数会自动切到灰盒回归场景执行测试。
 预览真实酒馆：Godot 打开 `project.godot` → F5 运行（灰盒主线）；或命令行 `godot --path . -- --tavern-preview` 直接进入真实酒馆场景（纯视觉，微调中）。
 运行方式：Godot 4.7.2 打开 `project.godot` → F5。游戏流程：约 12 秒后开张，顾客自动进店下单；对准等待中的 NPC 按 **E** 交付酒水（吧台拾取或 Debug Panel 补货）。Debug 面板（右上）：生成顾客/添加物品/金币/快进/关门/重置/暂停/倍率。日末自动结算并存入 user://arcane_tavern_save_v1.json；带 `--autoload-save` 启动可接续存档。
 
