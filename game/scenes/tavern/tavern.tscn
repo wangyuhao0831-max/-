@@ -24,6 +24,7 @@
 [ext_resource type="Script" path="res://game/scripts/tavern/order_manager.gd" id="s_om"]
 [ext_resource type="Script" path="res://game/scripts/tavern/customer_spawner.gd" id="s_sp"]
 [ext_resource type="Script" path="res://game/scripts/tavern/dev_playground_root.gd" id="s_root"]
+[ext_resource type="PackedScene" path="res://game/art/tavern/medieval+wall+panels+3d+model/tripo_convert_8fb98191-fde4-4b97-8b29-9399f46a52d6.fbx" id="m_wall"]
 [ext_resource type="Resource" path="res://game/resources/items/bottle_ale.tres" id="r_bottle"]
 [ext_resource type="Texture2D" path="res://game/art/tavern/textures/wall_bricks.jpg" id="t_brick"]
 [ext_resource type="Texture2D" path="res://game/art/tavern/textures/floor_wood.jpg" id="t_floor"]
@@ -490,6 +491,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.15, 1.45, 1.5)
 scale = Vector3(0.6, 0.6, 0.6)
 mesh = SubResource("MeshBottle")
 material_override = SubResource("MatAmber")
+
+[node name="WallPanelS_L" parent="." instance=ExtResource("m_wall")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 1.3, 4.5)
+scale = Vector3(3.5, 3.5, 0.25)
+
+[node name="WallPanelS_R" parent="." instance=ExtResource("m_wall")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 1.3, 4.5)
+scale = Vector3(3.5, 3.5, 0.25)
 [node name="LampPole0" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.1, 0)
 mesh = SubResource("MeshLampPole")
