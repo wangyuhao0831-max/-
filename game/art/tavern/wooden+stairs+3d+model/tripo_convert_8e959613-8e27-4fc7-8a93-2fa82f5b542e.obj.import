@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://v76nc2uqx0fo"
+path="res://.godot/imported/tripo_convert_8e959613-8e27-4fc7-8a93-2fa82f5b542e.obj-9d95c59494e7e0c1289f2fbf65c29871.mesh"
+
+[deps]
+
+files=["res://.godot/imported/tripo_convert_8e959613-8e27-4fc7-8a93-2fa82f5b542e.obj-9d95c59494e7e0c1289f2fbf65c29871.mesh"]
+
+source_file="res://game/art/tavern/wooden+stairs+3d+model/tripo_convert_8e959613-8e27-4fc7-8a93-2fa82f5b542e.obj"
+dest_files=["res://.godot/imported/tripo_convert_8e959613-8e27-4fc7-8a93-2fa82f5b542e.obj-9d95c59494e7e0c1289f2fbf65c29871.mesh", "res://.godot/imported/tripo_convert_8e959613-8e27-4fc7-8a93-2fa82f5b542e.obj-9d95c59494e7e0c1289f2fbf65c29871.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false

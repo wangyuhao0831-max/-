@@ -5,11 +5,16 @@ extends Node3D
 ## 注：仅做场景↔系统的"接线"，不含业务决策（R7/R8 边界之外属装配职责）。
 
 const AUTOLOAD_ARG := "--autoload-save"
+const PREVIEW_ARG := "--tavern-preview"
+const TAVERN_SCENE := "res://game/scenes/tavern/tavern.tscn"
 
 @export var inventory_path: NodePath = ^"Player/Inventory"
 
 
 func _ready() -> void:
+	if OS.get_cmdline_user_args().has(PREVIEW_ARG):
+		get_tree().change_scene_to_file(TAVERN_SCENE)
+		return
 	EventBus.save_requested.connect(_on_save_requested)
 	if OS.get_cmdline_user_args().has(AUTOLOAD_ARG):
 		_try_load_save()

@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://ydvolq5ksshr"
+path="res://.godot/imported/tripo_convert_a51a88c4-5e07-4cb2-a522-38a71ade1d77.obj-3af22fb4596f77fc63d81fadbdbf7a4e.mesh"
+
+[deps]
+
+files=["res://.godot/imported/tripo_convert_a51a88c4-5e07-4cb2-a522-38a71ade1d77.obj-3af22fb4596f77fc63d81fadbdbf7a4e.mesh"]
+
+source_file="res://game/art/tavern/medieval+banners+3d+model/tripo_convert_a51a88c4-5e07-4cb2-a522-38a71ade1d77.obj"
+dest_files=["res://.godot/imported/tripo_convert_a51a88c4-5e07-4cb2-a522-38a71ade1d77.obj-3af22fb4596f77fc63d81fadbdbf7a4e.mesh", "res://.godot/imported/tripo_convert_a51a88c4-5e07-4cb2-a522-38a71ade1d77.obj-3af22fb4596f77fc63d81fadbdbf7a4e.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false

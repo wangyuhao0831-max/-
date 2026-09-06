@@ -32,9 +32,10 @@ project root  = res:// 根（Godot 工程根）
 │  │  ├─ save/          # SaveManager（最小 JSON 存档）✅（2C）
 │  │  ├─ ai/            # AIClient 接口 / MockAIClient（后续 Goal；NPC 决策点已预留）
 │  │  └─ ui/            # DebugHUD + DebugPanel（调试 UI；仅订阅/按钮驱动，R8）
-│  ├─ scenes/           # 场景（dev/：dev_playground 主场景 + npc_customer 模板 + dropped_pickup）
+│  ├─ scenes/           # 场景（dev/：dev_playground 主场景 + npc_customer 模板 + dropped_pickup；tavern/：真实酒馆预览）
+│  ├─ art/              # 本地模型/贴图资产：tavern/**（家具/木桶/旗帜/楼梯 + 墙板）⭐已接入
 │  ├─ resources/        # 数据驱动配置：items/*.tres、npcs/*.tres（DataRegistry 启动扫描）
-│  └─ tests/            # headless 自动化测试（--smoke / --smoke-contract / --smoke-loop / --smoke-days）
+│  └─ tests/            # headless 自动化测试（--smoke* / --check-tavern）
 ├─ docs/                # 工程文档（架构 / 编码规范 / TASKS 验收）
 ├─ icon.svg
 └─ project.godot        # Godot 4.7（config_version=5；autoload×5 + InputMap）
@@ -69,7 +70,10 @@ $gd = 'D:\Godot\Godot_v4.7.2-stable_win64_console.exe'
 & $gd --headless --path . --quit-after 12000 -- --smoke-loop
 # 6) Phase 2C 双营业日验收：顾客流/订单成败/经济/声望/结算/存档/次日
 & $gd --headless --path . --quit-after 9000 -- --smoke-days
+# 7) 真实酒馆场景加载检查
+& $gd --headless --path . --quit-after 900 -- --check-tavern
 ```
+预览真实酒馆：Godot 打开 `project.godot` → F5 运行（灰盒主线）；或命令行 `godot --path . -- --tavern-preview` 直接进入真实酒馆场景（纯视觉，微调中）。
 运行方式：Godot 4.7.2 打开 `project.godot` → F5。游戏流程：约 12 秒后开张，顾客自动进店下单；对准等待中的 NPC 按 **E** 交付酒水（吧台拾取或 Debug Panel 补货）。Debug 面板（右上）：生成顾客/添加物品/金币/快进/关门/重置/暂停/倍率。日末自动结算并存入 user://arcane_tavern_save_v1.json；带 `--autoload-save` 启动可接续存档。
 
 运行方式：Godot 4.7.2 打开 `project.godot` → F5。操作：WASD 移动、鼠标视角（左键捕获 / Esc 释放）、对准物品按 **E** 拾取、按 **Q** 丢下；顾客 NPC 会自行进店找座下单，对准等待中的 NPC 按 **E** 交付酒水（DebugHUD 左下角显示状态与最近结果）。

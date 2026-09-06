@@ -172,6 +172,47 @@
 
 ---
 
+## 场景搭建：Arcane Tavern 真实酒馆（Phase 2C+ Art Integration —— 首批落地）
+
+> 依据场景设计图（《魔法酒馆·场景设计图》：入口/吧台+储物/就餐区/壁炉/楼梯+阁楼/二层扩展）
+> 用本地资产包搭建首个可加载的真实酒馆场景。
+
+### 资产管线（已验证全链路可用）
+
+| 资产 | 格式 | Godot 导入结果 |
+|---|---|---|
+| wooden+furniture | OBJ+MTL+JPG | ✅ Mesh + 贴图（`game/art/tavern/...`） |
+| wooden+barrels | OBJ+MTL+JPG | ✅ Mesh + 贴图 |
+| medieval+banners | OBJ+MTL+JPG | ✅ Mesh + 贴图 |
+| wooden+stairs | OBJ+MTL+JPG | ✅ Mesh + 贴图 |
+| medieval+wall+panels | FBX+JPEG | ✅ **Scene**（本版本可导入 FBX）+ 9 张贴图 |
+
+- 注：无 Blender；本机 Godot 4.7 可直接导入 OBJ 与 FBX（无转换阻塞）。
+- 模型为 Tripo 归一化源（约 0.2–1.0 单位、底部贴 y=0）→ 场景内已按比例放大摆放，细节待编辑器微调。
+
+### 交付
+
+- [x] `game/scenes/tavern/tavern.tscn`：真实酒馆（14×10m）——地面/四面墙（墙板贴图）/天花板/入口缺口/吧台+储物架（北墙）/壁炉+火点光源（东墙）/楼梯（东北）+阁楼占位/"二楼后续扩展"/就餐区家具×4/木桶×6/挂旗×2/吊灯×2 + 方向光 + 环境
+- [x] 各模型挂材质贴图（StandardMaterial3D albedo_texture）
+- [x] 探针验证：`--check-tavern`（加载+实例化，26 Mesh / 4 Light，无空网格）
+- [x] 预览开关：`--tavern-preview`（启动切到 tavern 场景）；DevPlayground（灰盒+自动测试）仍为主场景
+
+### 验证记录
+
+- 资产解压入 `res://game/art/tavern/**`；`--import` 无错误
+- `-- --check-tavern`：**PASS**（加载/实例化/网格/灯光就位）
+- Phase 1/2A/2B/2C 全量回归：**零失败**（主场景未改，预览为独立场景）
+
+### 后续（待办，未开始）
+
+- 编辑器内微调模型缩放/朝向/位置（首次摆放为近似值）
+- 补齐设计图缺失道具：吊灯（现为点位光）、植物、酒桶架、酒杯/酒瓶陈列、地毯
+- 把真实酒馆作为游玩主场景并接入碰撞/交互/NPC 座位（当前预览场景纯视觉，无碰撞）
+- 家具 mesh 内含多件，如需单件摆放需拆分（GDScript 内网格拆分或建模工具）
+- 墙板贴图平铺 UV 校正
+
+---
+
 ### Phase 1 后续（未开始，规划清单）
 
 **范围**：以下模块 + NPC 完整状态流，配合灰盒酒馆场景（可复用桌面素材）。验收 = 用户侧一条完整流程：

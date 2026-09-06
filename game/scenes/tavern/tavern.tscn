@@ -1,0 +1,237 @@
+[gd_scene load_steps=38 format=3]
+
+[ext_resource type="Mesh" path="res://game/art/tavern/wooden+furniture+3d+model/tripo_convert_b1713160-0a9c-4227-bd75-522ffa10b8e8.obj" id="m_fur"]
+[ext_resource type="Texture2D" path="res://game/art/tavern/wooden+furniture+3d+model/_basecolor.jpg" id="t_fur"]
+[ext_resource type="Mesh" path="res://game/art/tavern/wooden+barrels+3d+model/tripo_convert_71ced92c-14d4-4041-b697-20c6d90be167.obj" id="m_bar"]
+[ext_resource type="Texture2D" path="res://game/art/tavern/wooden+barrels+3d+model/_basecolor.jpg" id="t_bar"]
+[ext_resource type="Mesh" path="res://game/art/tavern/medieval+banners+3d+model/tripo_convert_a51a88c4-5e07-4cb2-a522-38a71ade1d77.obj" id="m_ban"]
+[ext_resource type="Texture2D" path="res://game/art/tavern/medieval+banners+3d+model/_basecolor.jpg" id="t_ban"]
+[ext_resource type="Mesh" path="res://game/art/tavern/wooden+stairs+3d+model/tripo_convert_8e959613-8e27-4fc7-8a93-2fa82f5b542e.obj" id="m_sta"]
+[ext_resource type="Texture2D" path="res://game/art/tavern/wooden+stairs+3d+model/_basecolor.jpg" id="t_sta"]
+[ext_resource type="Texture2D" path="res://game/art/tavern/medieval+wall+panels+3d+model/tripo_convert_8fb98191-fde4-4b97-8b29-9399f46a52d6.fbm/medieval_wall_panels_3d_model_tripo_part_0_basecolor.JPEG" id="t_w0"]
+[ext_resource type="Texture2D" path="res://game/art/tavern/medieval+wall+panels+3d+model/tripo_convert_8fb98191-fde4-4b97-8b29-9399f46a52d6.fbm/medieval_wall_panels_3d_model_tripo_part_1_basecolor.JPEG" id="t_w1"]
+[ext_resource type="Texture2D" path="res://game/art/tavern/medieval+wall+panels+3d+model/tripo_convert_8fb98191-fde4-4b97-8b29-9399f46a52d6.fbm/medieval_wall_panels_3d_model_tripo_part_3_basecolor.JPEG" id="t_w3"]
+
+[sub_resource type="StandardMaterial3D" id="MatFloor"]
+albedo_color = Color(0.34, 0.22, 0.12, 1)
+roughness = 0.8
+[sub_resource type="StandardMaterial3D" id="MatCeiling"]
+albedo_color = Color(0.24, 0.16, 0.09, 1)
+roughness = 0.85
+[sub_resource type="StandardMaterial3D" id="MatWall0"]
+albedo_texture = ExtResource("t_w0")
+roughness = 0.9
+[sub_resource type="StandardMaterial3D" id="MatWall1"]
+albedo_texture = ExtResource("t_w1")
+roughness = 0.9
+[sub_resource type="StandardMaterial3D" id="MatWall3"]
+albedo_texture = ExtResource("t_w3")
+roughness = 0.9
+[sub_resource type="StandardMaterial3D" id="MatFurniture"]
+albedo_texture = ExtResource("t_fur")
+roughness = 0.7
+[sub_resource type="StandardMaterial3D" id="MatBarrel"]
+albedo_texture = ExtResource("t_bar")
+roughness = 0.7
+[sub_resource type="StandardMaterial3D" id="MatBanner"]
+albedo_texture = ExtResource("t_ban")
+roughness = 0.8
+[sub_resource type="StandardMaterial3D" id="MatStairs"]
+albedo_texture = ExtResource("t_sta")
+roughness = 0.7
+[sub_resource type="StandardMaterial3D" id="MatCounter"]
+albedo_color = Color(0.3, 0.18, 0.1, 1)
+roughness = 0.6
+[sub_resource type="StandardMaterial3D" id="MatStone"]
+albedo_color = Color(0.42, 0.4, 0.38, 1)
+roughness = 0.95
+[sub_resource type="StandardMaterial3D" id="MatFire"]
+albedo_color = Color(1.0, 0.55, 0.2, 1)
+emission_enabled = true
+emission = Color(1.0, 0.45, 0.12, 1)
+emission_energy_multiplier = 3.0
+[sub_resource type="BoxMesh" id="MeshFloor"]
+size = Vector3(14, 0.2, 10)
+[sub_resource type="BoxMesh" id="MeshWallX"]
+size = Vector3(14, 4, 0.3)
+[sub_resource type="BoxMesh" id="MeshWallZ"]
+size = Vector3(0.3, 4, 10)
+[sub_resource type="BoxMesh" id="MeshWallSeg"]
+size = Vector3(5.5, 4, 0.3)
+[sub_resource type="BoxMesh" id="MeshCeiling"]
+size = Vector3(14, 0.2, 10)
+[sub_resource type="BoxMesh" id="MeshCounter"]
+size = Vector3(4.5, 1.1, 0.9)
+[sub_resource type="BoxMesh" id="MeshShelf"]
+size = Vector3(0.6, 2.6, 3.4)
+[sub_resource type="BoxMesh" id="MeshStone"]
+size = Vector3(1.1, 2.4, 0.9)
+[sub_resource type="BoxMesh" id="MeshChimney"]
+size = Vector3(1.4, 3.4, 1.1)
+[sub_resource type="BoxMesh" id="MeshFire"]
+size = Vector3(0.5, 0.6, 0.25)
+[sub_resource type="BoxMesh" id="MeshLoft"]
+size = Vector3(13, 0.2, 3.4)
+[sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
+[sub_resource type="Sky" id="SkyRes"]
+sky_material = SubResource("SkyMat")
+[sub_resource type="Environment" id="EnvRes"]
+background_mode = 2
+sky = SubResource("SkyRes")
+tonemap_mode = 2
+ambient_light_source = 3
+
+[node name="Tavern" type="Node3D"]
+
+[node name="Environment" type="WorldEnvironment" parent="."]
+environment = SubResource("EnvRes")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-48, -35, 0)
+light_color = Color(1.0, 0.86, 0.72, 1)
+light_energy = 1.1
+shadow_enabled = true
+
+[node name="Floor" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+mesh = SubResource("MeshFloor")
+material_override = SubResource("MatFloor")
+
+[node name="WallN" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -4.9)
+mesh = SubResource("MeshWallX")
+material_override = SubResource("MatWall0")
+
+[node name="WallS_L" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.75, 2, 4.9)
+mesh = SubResource("MeshWallSeg")
+material_override = SubResource("MatWall1")
+
+[node name="WallS_R" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.75, 2, 4.9)
+mesh = SubResource("MeshWallSeg")
+material_override = SubResource("MatWall1")
+
+[node name="WallE" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.9, 2, 0)
+mesh = SubResource("MeshWallZ")
+material_override = SubResource("MatWall3")
+
+[node name="WallW" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.9, 2, 0)
+mesh = SubResource("MeshWallZ")
+material_override = SubResource("MatWall3")
+
+[node name="Ceiling" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.9, 0)
+mesh = SubResource("MeshCeiling")
+material_override = SubResource("MatCeiling")
+
+[node name="Loft" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.0, 3.2)
+mesh = SubResource("MeshLoft")
+material_override = SubResource("MatCeiling")
+[node name="BarCounter" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 0.55, -4.3)
+mesh = SubResource("MeshCounter")
+material_override = SubResource("MatCounter")
+
+[node name="BarShelf" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.6, 1.3, -3.2)
+mesh = SubResource("MeshShelf")
+material_override = SubResource("MatCounter")
+[node name="Fireplace" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.3, 1.2, -2.4)
+mesh = SubResource("MeshStone")
+material_override = SubResource("MatStone")
+
+[node name="Chimney" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.6, 1.7, -2.4)
+mesh = SubResource("MeshChimney")
+material_override = SubResource("MatStone")
+
+[node name="Fire" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.95, 0.85, -2.4)
+mesh = SubResource("MeshFire")
+material_override = SubResource("MatFire")
+
+[node name="FireLight" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.1, 1.3, -2.4)
+light_color = Color(1.0, 0.55, 0.25, 1)
+light_energy = 2.0
+omni_range = 9.0
+[node name="Stairs" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.6, 0, 3.6)
+scale = Vector3(2, 2, 2)
+mesh = ExtResource("m_sta")
+material_override = SubResource("MatStairs")
+[node name="TableSet" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 0, 2.2)
+scale = Vector3(2, 2, 2)
+mesh = ExtResource("m_fur")
+material_override = SubResource("MatFurniture")
+[node name="TableSet" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.2, 0, 0.8)
+scale = Vector3(2, 2, 2)
+mesh = ExtResource("m_fur")
+material_override = SubResource("MatFurniture")
+[node name="TableSet" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0, 2)
+scale = Vector3(2, 2, 2)
+mesh = ExtResource("m_fur")
+material_override = SubResource("MatFurniture")
+[node name="TableSet" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4, 0, -1.4)
+scale = Vector3(2, 2, 2)
+mesh = ExtResource("m_fur")
+material_override = SubResource("MatFurniture")
+[node name="Barrel" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.8, 0, 1.2)
+scale = Vector3(1.7, 1.7, 1.7)
+mesh = ExtResource("m_bar")
+material_override = SubResource("MatBarrel")
+[node name="Barrel" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.2, 0, 2.6)
+scale = Vector3(1.7, 1.7, 1.7)
+mesh = ExtResource("m_bar")
+material_override = SubResource("MatBarrel")
+[node name="Barrel" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.8, 0, 3)
+scale = Vector3(1.7, 1.7, 1.7)
+mesh = ExtResource("m_bar")
+material_override = SubResource("MatBarrel")
+[node name="Barrel" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 0.4)
+scale = Vector3(1.7, 1.7, 1.7)
+mesh = ExtResource("m_bar")
+material_override = SubResource("MatBarrel")
+[node name="Barrel" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, -4.3)
+scale = Vector3(1.7, 1.7, 1.7)
+mesh = ExtResource("m_bar")
+material_override = SubResource("MatBarrel")
+[node name="Barrel" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6, 0, -4.3)
+scale = Vector3(1.7, 1.7, 1.7)
+mesh = ExtResource("m_bar")
+material_override = SubResource("MatBarrel")
+[node name="Banner" type="MeshInstance3D" parent="."]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -1.5, 2.6, -4.75)
+scale = Vector3(1.2, 1.2, 1.2)
+mesh = ExtResource("m_ban")
+material_override = SubResource("MatBanner")
+[node name="Banner" type="MeshInstance3D" parent="."]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 2, 2.6, -4.75)
+scale = Vector3(1.2, 1.2, 1.2)
+mesh = ExtResource("m_ban")
+material_override = SubResource("MatBanner")
+[node name="Lamp" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4, 0)
+light_color = Color(1.0, 0.78, 0.5, 1)
+light_energy = 1.0
+omni_range = 12.0
+[node name="Lamp" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 3.4, -3)
+light_color = Color(1.0, 0.78, 0.5, 1)
+light_energy = 1.0
+omni_range = 12.0

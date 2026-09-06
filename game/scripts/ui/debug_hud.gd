@@ -17,10 +17,12 @@ const SMOKE_ARG := "--smoke"
 const CONTRACT_ARG := "--smoke-contract"
 const LOOP_ARG := "--smoke-loop"
 const DAYS_ARG := "--smoke-days"
+const TAVERN_ARG := "--check-tavern"
 const SMOKE_SCRIPT := "res://game/tests/dev_playground_smoke.gd"
 const CONTRACT_SCRIPT := "res://game/tests/phase2a_contract_smoke.gd"
 const LOOP_SCRIPT := "res://game/tests/phase2b_loop_smoke.gd"
 const DAYS_SCRIPT := "res://game/tests/phase2c_days_smoke.gd"
+const TAVERN_SCRIPT := "res://game/tests/tavern_probe.gd"
 
 var _player: PlayerController = null
 var _label: Label = null
@@ -57,6 +59,8 @@ func _ready() -> void:
 		call_deferred("_launch_smoke", LOOP_SCRIPT)
 	elif args.has(DAYS_ARG):
 		call_deferred("_launch_smoke", DAYS_SCRIPT)
+	elif args.has(TAVERN_ARG):
+		call_deferred("_launch_smoke", TAVERN_SCRIPT)
 
 
 func _process(delta: float) -> void:
