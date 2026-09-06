@@ -199,7 +199,8 @@
 - [x] 自动测试与主场景解耦：GameManager 检测 --smoke*/--smoke-contract/--smoke-loop/--smoke-days 时自动切回 dev_playground（其节点布局为回归基准）；--check-tavern / --smoke-tavern 在真实酒馆主场景运行
 - [x] 真实酒馆闭环烟测 `--smoke-tavern`：**9 断言 PASS**（开张→生成顾客→寻路→坐下→下单→吧台拾瓶→交付→付款/饮用→离场→座位释放，验证新碰撞布局下 NPC 路径可走）
 - [x] **墙面/地面/吧台贴图修复（CC0 平铺）**：原墙板 JPG 是"图集(atlas)"，整图贴盒面会乱拼 —— 已改自取 ambientCG CC0 可平铺贴图（砖墙 wall_bricks / 木地板 floor_wood / 木梁 wood_beams），墙面/吊顶/吧台用 `uv1_scale` 平铺（`game/art/tavern/textures/`）
-- [x] **家具拆分**：把合并的 furniture OBJ（16 对象）按对象拆成独立 Mesh（`game/art/tavern/furniture_split/part_00..15.obj`，保留 UV，_basecolor 图集正确采样），场景内改为"2 桌 + 4 凳"独立摆放；该资产为微缩比例（最大 0.31m），已放大 ~2.4–3×（比例仍偏小，见待办）
+- [x] **家具拆分**：把合并的 furniture OBJ（16 对象）按对象拆成独立 Mesh（`furniture_split/part_00..15.obj`，保留 UV）—— 实测该资产为**微缩/娃娃屋比例**（最大 0.31m），作主体家具观感差
+- [x] **改用真实尺寸图元家具**（依据可视截图）：弃用微缩件作主体，改 Godot 图元按真实比例重建 —— 圆桌(桌面+独腿)+吧凳×6、U 型卡座×2（北墙椅背+坐垫+桌板）、大酒桶×4（桶身+箍环）、吧台台面、长凳；视觉件（不加碰撞）保留已通过的 NPC 走线
 
 ### 验证记录
 
