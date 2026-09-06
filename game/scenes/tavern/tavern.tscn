@@ -25,21 +25,35 @@
 [ext_resource type="Script" path="res://game/scripts/tavern/customer_spawner.gd" id="s_sp"]
 [ext_resource type="Script" path="res://game/scripts/tavern/dev_playground_root.gd" id="s_root"]
 [ext_resource type="Resource" path="res://game/resources/items/bottle_ale.tres" id="r_bottle"]
+[ext_resource type="Texture2D" path="res://game/art/tavern/textures/wall_bricks.jpg" id="t_brick"]
+[ext_resource type="Texture2D" path="res://game/art/tavern/textures/floor_wood.jpg" id="t_floor"]
+[ext_resource type="Texture2D" path="res://game/art/tavern/textures/wood_beams.jpg" id="t_beam"]
+[ext_resource type="Mesh" path="res://game/art/tavern/furniture_split/part_00.obj" id="m_p00"]
+[ext_resource type="Mesh" path="res://game/art/tavern/furniture_split/part_01.obj" id="m_p01"]
+[ext_resource type="Mesh" path="res://game/art/tavern/furniture_split/part_02.obj" id="m_p02"]
+[ext_resource type="Mesh" path="res://game/art/tavern/furniture_split/part_03.obj" id="m_p03"]
+[ext_resource type="Mesh" path="res://game/art/tavern/furniture_split/part_04.obj" id="m_p04"]
+[ext_resource type="Mesh" path="res://game/art/tavern/furniture_split/part_05.obj" id="m_p05"]
 
 [sub_resource type="StandardMaterial3D" id="MatFloor"]
-albedo_color = Color(0.34, 0.22, 0.12, 1)
-roughness = 0.8
+albedo_texture = ExtResource("t_floor")
+uv1_scale = Vector3(6, 5, 1)
+roughness = 0.85
 [sub_resource type="StandardMaterial3D" id="MatCeiling"]
-albedo_color = Color(0.24, 0.16, 0.09, 1)
+albedo_texture = ExtResource("t_beam")
+uv1_scale = Vector3(6, 4, 1)
 roughness = 0.85
 [sub_resource type="StandardMaterial3D" id="MatWall0"]
-albedo_texture = ExtResource("t_w0")
+albedo_texture = ExtResource("t_brick")
+uv1_scale = Vector3(4, 2, 1)
 roughness = 0.9
 [sub_resource type="StandardMaterial3D" id="MatWall1"]
-albedo_texture = ExtResource("t_w1")
+albedo_texture = ExtResource("t_brick")
+uv1_scale = Vector3(4, 2, 1)
 roughness = 0.9
 [sub_resource type="StandardMaterial3D" id="MatWall3"]
-albedo_texture = ExtResource("t_w3")
+albedo_texture = ExtResource("t_brick")
+uv1_scale = Vector3(4, 2, 1)
 roughness = 0.9
 [sub_resource type="StandardMaterial3D" id="MatFurniture"]
 albedo_texture = ExtResource("t_fur")
@@ -54,7 +68,8 @@ roughness = 0.8
 albedo_texture = ExtResource("t_sta")
 roughness = 0.7
 [sub_resource type="StandardMaterial3D" id="MatCounter"]
-albedo_color = Color(0.3, 0.18, 0.1, 1)
+albedo_texture = ExtResource("t_beam")
+uv1_scale = Vector3(3, 2, 1)
 roughness = 0.6
 [sub_resource type="StandardMaterial3D" id="MatAmber"]
 albedo_color = Color(0.93, 0.68, 0.25, 1)
@@ -302,30 +317,41 @@ scale = Vector3(2, 2, 2)
 mesh = ExtResource("m_sta")
 material_override = SubResource("MatStairs")
 
-[node name="TableSet" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0, 2.5)
-scale = Vector3(2, 2, 2)
-mesh = ExtResource("m_fur")
+[node name="TableA" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0, 1.5)
+scale = Vector3(3.0, 3.0, 3.0)
+mesh = ExtResource("m_p01")
 material_override = SubResource("MatFurniture")
 
-[node name="TableSet" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, -1)
-scale = Vector3(2, 2, 2)
-mesh = ExtResource("m_fur")
+[node name="StoolA1" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.3, 0, 1.5)
+scale = Vector3(2.4, 2.4, 2.4)
+mesh = ExtResource("m_p00")
 material_override = SubResource("MatFurniture")
 
-[node name="TableSet" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 0, -3)
-scale = Vector3(2, 2, 2)
-mesh = ExtResource("m_fur")
+[node name="StoolA2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.7, 0, 1.5)
+scale = Vector3(2.4, 2.4, 2.4)
+mesh = ExtResource("m_p02")
 material_override = SubResource("MatFurniture")
 
-[node name="TableSet" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -3)
-scale = Vector3(2, 2, 2)
-mesh = ExtResource("m_fur")
+[node name="TableB" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.0, 0, -2.0)
+scale = Vector3(3.0, 3.0, 3.0)
+mesh = ExtResource("m_p03")
 material_override = SubResource("MatFurniture")
 
+[node name="StoolB1" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.9, 0, -2.0)
+scale = Vector3(2.4, 2.4, 2.4)
+mesh = ExtResource("m_p04")
+material_override = SubResource("MatFurniture")
+
+[node name="StoolB2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.1, 0, -2.0)
+scale = Vector3(2.4, 2.4, 2.4)
+mesh = ExtResource("m_p05")
+material_override = SubResource("MatFurniture")
 [node name="Barrel" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.4, 0, -2)
 scale = Vector3(1.7, 1.7, 1.7)

@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://cwyx5mc7l508l"
+path="res://.godot/imported/part_00.obj-e14948c3fd9db9e2eddfbe8de8c3312d.mesh"
+
+[deps]
+
+files=["res://.godot/imported/part_00.obj-e14948c3fd9db9e2eddfbe8de8c3312d.mesh"]
+
+source_file="res://game/art/tavern/furniture_split/part_00.obj"
+dest_files=["res://.godot/imported/part_00.obj-e14948c3fd9db9e2eddfbe8de8c3312d.mesh", "res://.godot/imported/part_00.obj-e14948c3fd9db9e2eddfbe8de8c3312d.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false
